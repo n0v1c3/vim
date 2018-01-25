@@ -1,9 +1,8 @@
-" Name: user.vim
-" Description: TODO code
+" Name: users.vim
+" Description: 
 " Authors: Travis Gall
 " Notes:
 
-" TODO [171104] - Need escape sequence
 " Get a string input from the user
 function! UserInput(prompt)
     " Get input from user
