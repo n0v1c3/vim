@@ -1,10 +1,15 @@
 " File: .vimrc
 " Description: VIM configuration file
-" Authors: Travis Gall
+
 
 source ~/.vim/functions/folds.vim
 source ~/.vim/functions/todos.vim
 source ~/.vim/functions/users.vim
+
+" Always display the sign column for ALE
+set signcolumn=yes
+
+" let g:pymode_python = 'python3'
 
 " Configuration {{{1
 " Global {{{2
@@ -24,6 +29,9 @@ set foldlevelstart=1
 set foldmethod=marker
 set foldnestmax=10
 set foldtext=v:folddashes.FormatFoldString(v:foldstart)
+
+" Fonts {{{2
+set guifont=Font\ Awesome\ 14
 
 " Indents {{{2
 filetype plugin indent on
@@ -82,6 +90,12 @@ augroup AHK
   autocmd  BufNewFile,BufRead *.ahk source $VIM/indents/autohotkey.vim
 augroup END
 
+" Highlighting {{{2
+let didit = 0
+autocmd! InsertEnter * if ! didit | call feedkeys("\<C-\>\<C-o>:nohlsearch|let didit = 1\<CR>", 'n') | endif
+autocmd! InsertLeave * let didit = 0
+
+
 " Remove automatic commenting
 set formatoptions-=cro
 
@@ -89,27 +103,82 @@ set formatoptions-=cro
 " Pathogen {{{2
 execute pathogen#infect()
 
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'megaannum/forms'
+Plugin 'rafi/vim-unite-issue'
+Plugin 'mnpk/vim-jira-complete'
+
+" YouCompleteMe
+Plugin 'Valloric/YouCompleteMe'
+
+" Auto linting
+Plugin 'w0rp/ale'
+
+" Auto formatting
+Plugin 'google/yapf'
+Plugin 'pignacio/vim-yapf-format'
+
+call vundle#end()
+filetype plugin indent on
+
 " CtrlP {{{2
 let g:ctrlp_cmd = 'CtrlPMRU' " Most recent files
 
+" JIRA Complete {{{2
+let g:jira_url = 'https://jira.advmeas.com:8443'
+let g:jira_username = 'travis.gall'
+let g:jira_password = 'AdvMeas2'
+let g:unite_source_issue_jira_priority_table = {
+  \ 10000: '◡', 1: '⚡', 2: 'ᛏ', 3: '●', 4: '○', 5: '▽' }
+let g:unite_source_issue_jira_status_table = {
+  \ 1: 'plan', 3: 'develop', 4: 'reopened', 5: 'resolved', 6: 'closed',
+  \ 10000: 'feedback', 10001: 'staged', 10002: 'waiting',
+  \ 10003: 'deployed', 10004: 'pending', 10008: 'review' }
+let g:unite_source_issue_jira_type_table = {
+  \ 1: 'bug', 2: 'feature', 3: 'task', 4: 'change', 5: 'sub-task',
+  \ 6: 'epic', 7: 'story', 8: 'system', 9: 'sub-bug' }
+
+let g:jiracomplete_url = 'https://jira.advmeas.com:8443'
+let g:jiracomplete_username = 'travis.gall'
+let g:jiracomplete_password = 'AdvMeas2'
+let g:jiracomplete_format = 'v:val.abbr . " -> " . v:val.menu'
+
 " NERD {{{2
 let g:NERDSpaceDelims=1 " One space after auto comment
-" Syntastic {{{2
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+" ALE {{{2
 let g:syntastic_php_checkers = ['php', '/bin/phplint']
 let g:syntastic_sh_checkers = ['bashate', 'sh', 'shellcheck']
 let g:syntastic_sh_shellcheck_args = '--external-sources'
 let g:syntastic_vim_checkers = ['vimlint', 'vint']
 let g:syntastic_sql_checkers = ['sqlint']
+let g:syntastic_python_checkers = ['flake8', 'python']
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:ale_set_loclist = 1
+let g:ale_statusline_format = [' %d', ' %d', '⬥ ok']
+let g:ale_sign_error = ''
+let g:ale_sign_warning = ''
+highlight ALEErrorSign ctermbg=NONE ctermfg=red
+highlight ALEWarningSign ctermbg=NONE ctermfg=brown
+
+" YAPF {{{2
+let g:yapf_format_yapf_location = '/home/travis/.vim/bundle/yapf'
 
 " Key Mappings {{{1
 " VIM {{{2
 " Key Overrides
 noremap j gj
 noremap k gk
+noremap <silent> p p:SyntasticCheck<cr>
+noremap <silent> u u:SyntasticCheck<cr>
 nnoremap <silent>/ :let hlstate=1<cr>:set hlsearch<cr>:set incsearch<cr>/\v
 nnoremap <silent> H ^
 nnoremap <silent> J }
@@ -132,6 +201,10 @@ nnoremap <silent> <leader>tG mm:call GetTODOs()<cr>`m
 nnoremap <silent> <leader>ti mmO<C-c>:call setline('.',SetTODO('TJG'))<cr>:call NERDComment(0,'toggle')<cr>==`m
 0
 nnoremap <silent> <leader>td :call TakeTODO('TJG')<cr>
+
+" 'E' Errors {{{2
+nnoremap <silent> <leader>ej :lnext<cr>
+nnoremap <silent> <leader>ek :lprev<cr>
 
 " 'F' Formating {{{2
 nnoremap <silent> <leader>fu mmviwU`m
@@ -210,3 +283,13 @@ function! s:ToggleHighlighting()
     let g:hlstate = 1
   endif
 endfunction
+
+set wildmenu
+set wildmode=full
+source $VIMRUNTIME/menu.vim
+set wildcharm=<C-Z>
+" map <F4> :emenu <C-Z>
+nmap <F2> :call forms#menu#MakeMenu('n')<CR>
+vmap <F2> :call forms#menu#MakeMenu('v')<CR>
+nmap <F3> :call forms#menu#MakePopUp('n')<CR>
+vmap <F3> :call forms#menu#MakePopUp('v')<CR>
