@@ -1,44 +1,88 @@
 " Vim syntax file
-" Language:   Autohotkey from www.autohotkey.com
-" Maintainer:   Jose Quesada (quesada AT gmail DOT com)
-" based on previous versions
-" savage - kallen19918 AT earthlink DOT net
-" Nikolai Weibull <now@bitwi.se>
-"
-" best used with pspad.vim colors scheme
-"Usage:
-"1) Copy this file into your $VIM/syntax directory.
-"2) Add this line to filetype.vim:
-"au BufNewFile,BufRead *.ahk setf ahk
-"
-" For version 5.x: Clear all syntax items
-" For version 6.x: Quit when a syntax file was already loaded
-if (version < 600)
-	syntax clear
-elseif exists("b:current_syntax")
-	finish
+" Language:         AutoHotkey script file
+" Maintainer:       Michael Wong
+"                   https://github.com/mmikeww/autohotkey.vim
+" Latest Revision:  2017-04-03
+" Previous Maintainers:       SungHyun Nam <goweol@gmail.com>
+"                             Nikolai Weibull <now@bitwi.se>
+
+if exists("b:current_syntax")
+  finish
 endif
 
-" add the ; for ahk comments to work well (wrap and continue)
-set comments=s1:/*,mb:*,ex:*/,:;
+let s:cpo_save = &cpo
+set cpo&vim
 
-sy case ignore
+syn case ignore
 
-sy keyword ahkKeyword ahk_id ahk_pid ahk_class ahk_group ahk_parent true false
+syn keyword autohotkeyTodo
+      \ contained
+      \ TODO FIXME XXX NOTE
 
-" this is a great hack by savage. The problem is that it colors whatever you are
-" writing in ahkFunction color, and then it turns normal when you leave. Very
-" distracting. The solution is less elegant: list all posible ahk commands,
-" which we do next.
+" only these chars are valid as escape sequences:   ,%`;nrbtvaf
+" https://autohotkey.com/docs/commands/_EscapeChar.htm
+syn match   autohotkeyEscape
+      \ display
+      \ '`[,%`;nrbtvaf]'
 
-" sy match ahkFunction "^\s*\w\{1,},"
-" sy match ahkFunction "\w\{1,}," contained
-" sy match ahkFunction "^\s*\w\{1,}\s*$" contains=ahkStatement
-" sy match ahkFunction "\w\{1,}\s*$" contained
-syn keyword ahkFunction
+syn region autohotkeyString
+      \ display
+      \ oneline
+      \ matchgroup=autohotkeyStringDelimiter
+      \ start=+"+
+      \ end=+"+
+      \ contains=autohotkeyEscape
+
+syn match autohotkeyVariable
+      \ display
+      \ oneline
+      \ contains=autohotkeyBuiltinVariable
+      \ keepend
+      \ '%\S\{-}%'
+
+syn keyword autohotkeyBuiltinVariable
+      \ A_Space A_Tab
+      \ A_WorkingDir A_ScriptDir A_ScriptName A_ScriptFullPath A_ScriptHwnd A_LineNumber
+      \ A_LineFile A_ThisFunc A_ThisLabel A_AhkVersion A_AhkPath A_IsUnicode A_IsCompiled A_ExitReason
+      \ A_YYYY A_MM A_DD A_MMMM A_MMM A_DDDD A_DDD A_WDay A_YDay A_YWeek A_Hour A_Min
+      \ A_Mon A_Year A_MDay A_NumBatchLines
+      \ A_Sec A_MSec A_Now A_NowUTC A_TickCount
+      \ A_IsSuspended A_IsPaused A_IsCritical A_BatchLines A_TitleMatchMode A_TitleMatchModeSpeed
+      \ A_DetectHiddenWindows A_DetectHiddenText A_AutoTrim A_StringCaseSense
+      \ A_FileEncoding A_FormatInteger A_FormatFloat A_KeyDelay A_WinDelay A_ControlDelay
+      \ A_SendMode A_SendLevel A_StoreCapsLockMode A_KeyDelay A_KeyDelayDuration
+      \ A_KeyDelayPlay A_KeyDelayPlayDuration A_MouseDelayPlay
+      \ A_MouseDelay A_DefaultMouseSpeed A_RegView A_IconHidden A_IconTip A_IconFile
+      \ A_CoordModeToolTip A_CoordModePixel A_CoordModeMouse A_CoordModeCaret A_CoordModeMenu
+      \ A_IconNumber
+      \ A_TimeIdle A_TimeIdlePhysical A_DefaultGui A_DefaultListView A_DefaultTreeView
+      \ A_Gui A_GuiControl A_GuiWidth A_GuiHeight A_GuiX A_GuiY A_GuiEvent
+      \ A_GuiControlEvent A_EventInfo
+      \ A_ThisMenuItem A_ThisMenu A_ThisMenuItemPos A_ThisHotkey A_PriorHotkey
+      \ A_PriorKey A_TimeSinceThisHotkey A_TimeSincePriorHotkey A_EndChar
+      \ ComSpec A_Temp A_OSType A_OSVersion A_Language A_ComputerName A_UserName
+      \ A_Is64BitOS A_PtrSize
+      \ A_WinDir A_ProgramFiles ProgramFiles A_AppData A_AppDataCommon A_Desktop
+      \ A_DesktopCommon A_StartMenu A_StartMenuCommon A_Programs
+      \ A_ProgramsCommon A_Startup A_StartupCommon A_MyDocuments A_IsAdmin
+      \ A_ScreenWidth A_ScreenHeight A_ScreenDPI A_IPAddress1 A_IPAddress2 A_IPAddress3
+      \ A_IPAddress4
+      \ A_Cursor A_CaretX A_CaretY Clipboard ClipboardAll ErrorLevel A_LastError
+      \ A_Index A_LoopFileName A_LoopRegName A_LoopReadLine A_LoopField
+      \ A_LoopFileExt A_LoopFileFullPath A_LoopFileLongPath A_LoopFileShortPath
+      \ A_LoopFileShortName A_LoopFileDir A_LoopFileTimeModified A_LoopFileTimeCreated
+      \ A_LoopFileTimeAccessed A_LoopFileAttrib A_LoopFileSize A_LoopFileSizeKB A_LoopFileSizeMB
+      \ A_LoopRegType A_LoopRegKey A_LoopRegSubKey A_LoopRegTimeModified
+
+syn match   autohotkeyBuiltinVariable
+      \ contained
+      \ display
+      \ '%\d\+%'
+
+syn keyword autohotkeyCommand
       \ ClipWait EnvGet EnvSet EnvUpdate
       \ Drive DriveGet DriveSpaceFree FileAppend FileCopy FileCopyDir
-      \ FileCreateDir FileCreateShortcut FileDelete FileGetAttrib
+      \ FileCreateDir FileCreateShortcut FileDelete FileGetAttrib FileEncoding
       \ FileGetShortcut FileGetSize FileGetTime FileGetVersion FileInstall
       \ FileMove FileMoveDir FileReadLine FileRead FileRecycle FileRecycleEmpty
       \ FileRemoveDir FileSelectFolder FileSelectFile FileSetAttrib FileSetTime
@@ -61,7 +105,8 @@ syn keyword ahkFunction
       \ SoundSetWaveVolume
       \ FormatTime IfInString IfNotInString Sort StringCaseSense StringGetPos
       \ StringLeft StringRight StringLower StringUpper StringMid StringReplace
-      \ StringSplit StringTrimLeft StringTrimRight
+      \ StringSplit StringTrimLeft StringTrimRight StringLen
+      \ StrSplit StrReplace Throw
       \ Control ControlClick ControlFocus ControlGet ControlGetFocus
       \ ControlGetPos ControlGetText ControlMove ControlSend ControlSendRaw
       \ ControlSetText Menu PostMessage SendMessage SetControlDelay
@@ -72,220 +117,206 @@ syn keyword ahkFunction
       \ WinGetText WinGetTitle WinHide WinKill WinMaximize WinMinimize
       \ WinMinimizeAll WinMinimizeAllUndo WinMove WinRestore WinSet
       \ WinSetTitle WinShow WinWait WinWaitActive WinWaitNotActive WinWaitClose
-      \ InStr RegExMatch RegExReplace StrLen SubStr Asc Chr
-      \ DllCall VarSetCapacity WinActive WinExist IsLabel OnMessage
+      \ SetCapsLockState SetNumLockState SetScrollLockState
+
+syn keyword autohotkeyFunction
+      \ InStr RegExMatch RegExReplace StrLen SubStr Asc Chr Func
+      \ DllCall VarSetCapacity WinActive WinExist IsLabel OnMessage 
       \ Abs Ceil Exp Floor Log Ln Mod Round Sqrt Sin Cos Tan ASin ACos ATan
-      \ FileExist GetKeyState numput numget RegisterCallback
+      \ FileExist GetKeyState NumGet NumPut StrGet StrPut RegisterCallback
+      \ IsFunc Trim LTrim RTrim IsObject Object Array FileOpen
+      \ ComObjActive ComObjArray ComObjConnect ComObjCreate ComObjGet
+      \ ComObjError ComObjFlags ComObjQuery ComObjType ComObjValue ComObject
+      \ Format Exception
 
-" these are user-defined functions, in dark green
-sy match ahkNewFunction "\s*\w\{1,}(.*)"
-sy match ahkNewFunctionParams "(\@<=.*)\@=" containedin=ahkNewFunction
+syn keyword autohotkeyStatement
+      \ Break Continue Exit ExitApp Gosub Goto OnExit Pause Return
+      \ Suspend Reload new class extends
 
-sy match ahkEscape "`." containedin=ahkFunction,ahkLabel,ahkVariable,ahkNewFunctionParams
+syn keyword autohotkeyRepeat
+      \ Loop
 
-" I don't like %var value% being in a different color than the var itself, so
-" commented out.
-"sy match ahkVariable "%.\{-}%" containedin=ahkNewFunctionParams
-"sy match ahkVariable "%.\{-}%"
+syn keyword autohotkeyConditional
+      \ IfExist IfNotExist If IfEqual IfLess IfGreater Else
+      \ IfWinExist IfWinNotExist IfWinActive IfWinNotActive
+      \ IfNotEqual IfLessOrEqual IfGreaterOrEqual
+      \ while until for in try catch finally
 
-sy match ahkKey "[!#^+]\{1,4}`\=.\n" contains=ahkEscape
-sy match ahkKey "[!#^+]\{0,4}{.\{-}}"
+syn match   autohotkeyPreProcStart
+      \ nextgroup=
+      \   autohotkeyInclude,
+      \   autohotkeyPreProc
+      \ skipwhite
+      \ display
+      \ '^\s*\zs#'
 
+syn keyword autohotkeyInclude
+      \ contained
+      \ Include
+      \ IncludeAgain
 
-sy match ahkDirective "^#[a-zA-Z]\{2,\}"
+syn keyword autohotkeyPreProc
+      \ contained
+      \ HotkeyInterval HotKeyModifierTimeout
+      \ Hotstring
+      \ IfWinActive IfWinNotActive IfWinExist IfWinNotExist
+      \ If IfTimeout
+      \ MaxHotkeysPerInterval MaxThreads MaxThreadsBuffer MaxThreadsPerHotkey
+      \ UseHook InstallKeybdHook InstallMouseHook
+      \ KeyHistory
+      \ NoTrayIcon SingleInstance
+      \ WinActivateForce
+      \ AllowSameLineComments
+      \ ClipboardTimeout
+      \ CommentFlag
+      \ ErrorStdOut
+      \ EscapeChar
+      \ MaxMem
+      \ NoEnv
+      \ Persistent
+      \ LTrim
+      \ InputLevel
+      \ MenuMaskKey
+      \ Warn
 
-sy match ahkLabel "^\w\+:\s*$"
-sy match ahkLabel "^[^,]\+:\{2\}\(\w\+,\)\="  contains=ahkFunction
-sy match ahkLabel "^[^,]\+:\{2\}\w\+\s*$" contains=ahkFunction
-sy match ahkLabel "^:.\+:.*::"
-sy keyword ahkLabel return containedin=ahkFunction
+syn keyword autohotkeyMatchClass
+      \ ahk_group ahk_class ahk_id ahk_pid ahk_exe
 
-sy match ahkStatement "^\s*if\w*\(,\)\="
-sy keyword ahkStatement If Else Loop Loop, exitapp containedin=ahkFunction
+syn match   autohotkeyNumbers
+      \ display
+      \ transparent
+      \ contains=
+      \   autohotkeyInteger,
+      \   autohotkeyFloat
+      \ '\<\d\|\.\d'
 
-sy match ahkComment "`\@<!;.*" contains=NONE
-sy match ahkComment "\/\*\_.\{-}\*\/" contains=NONE
-
-sy keyword ahkBuiltinVariable
-      \ A_Space A_Tab
-      \ A_WorkingDir A_ScriptDir A_ScriptName A_ScriptFullPath A_LineNumber
-      \ A_LineFile A_AhkVersion A_AhkPAth A_IsCompiled A_ExitReason
-      \ A_YYYY A_MM A_DD A_MMMM A_MMM A_DDDD A_DDD A_WDay A_YWeek A_Hour A_Min
-      \ A_Sec A_MSec A_Now A_NowUTC A_TickCount
-      \ A_IsSuspended A_BatchLines A_TitleMatchMode A_TitleMatchModeSpeed
-      \ A_DetectHiddenWindows A_DetectHiddenText A_AutoTrim A_STringCaseSense
-      \ A_FormatInteger A_FormatFloat A_KeyDelay A_WinDelay A_ControlDelay
-      \ A_MouseDelay A_DefaultMouseSpeed A_IconHidden A_IconTip A_IconFile
-      \ A_IconNumber
-      \ A_TimeIdle A_TimeIdlePhysical
-      \ A_Gui A_GuiControl A_GuiWidth A_GuiHeight A_GuiX A_GuiY A_GuiEvent
-      \ A_GuiControlEvent A_EventInfo
-      \ A_ThisMenuItem A_ThisMenu A_ThisMenuItemPos A_ThisHotkey A_PriorHotkey
-      \ A_TimeSinceThisHotkey A_TimeSincePriorHotkey A_EndChar
-      \ ComSpec A_Temp A_OSType A_OSVersion A_Language A_ComputerName A_UserName
-      \ A_WinDir A_ProgramFiles ProgramFiles A_AppData A_AppDataCommon A_Desktop
-      \ A_DesktopCommon A_StartMenu A_StartMenuCommon A_Programs
-      \ A_ProgramsCommon A_Startup A_StartupCommon A_MyDocuments A_IsAdmin
-      \ A_ScreenWidth A_ScreenHeight A_IPAddress1 A_IPAddress2 A_IPAddress3
-      \ A_IPAddress4
-      \ A_Cursor A_CaretX A_CaretY Clipboard ClipboardAll ErrorLevel A_LastError
-      \ A_Index A_LoopFileName A_LoopRegName A_LoopReadLine A_LoopField
-		\ A_thisLabel A_thisFunc
-
-sy match   ahkBuiltinVariable
+syn match   autohotkeyInteger
       \ contained
       \ display
-      \ '%\d\+%'
+      \ '\d\+\>'
 
-syn region ahkString
+syn match   autohotkeyInteger
+      \ contained
       \ display
-      \ oneline
-      \ matchgroup=autohotkeyStringDelimiter
-      \ start=+"+
-      \ end=+"+
-      \ contains=ahkEscape
+      \ '0x\x\+\>'
 
-" relative
-syn keyword ahkRelative
-	\Pixel Mouse Screen Relative RGB
+syn match   autohotkeyFloat
+      \ contained
+      \ display
+      \ '\d\+\.\d*\|\.\d\+\>'
 
-" Continuation sections:
-syn keyword ahkContinuation
-	\ LTrim RTrim Join
+syn keyword autohotkeyType
+      \ local
+      \ global
+      \ static
+      \ byref
 
-" Priority of processes
-syn keyword ahkPriority
-	\ Low BelowNormal Normal AboveNormal High Realtime
+syn keyword autohotkeyBoolean
+      \ true
+      \ false
 
-" Keywords inside the WinTitle parameter of various commands:
-syn keyword ahkWinTitle
-	\ ahk_id ahk_pid ahk_class ahk_group
+syn match   autohotkeyHotkey
+      \ contains=autohotkeyKey,
+      \   autohotkeyHotkeyDelimiter
+      \ display
+      \ '^\s*\S*\%( Up\)\?::'
 
-" Used with SetFormat and/or -if Var is [not] type- & BETWEEN/IN
-"syn keyword ahkSetFormatFamily
-"	\ Between Contains In Is Integer Float Number Digit Xdigit Alpha Upper Lower Alnum Time Date
+syn match   autohotkeyKey
+      \ contained
+      \ display
+      \ '^.\{-}'
 
-" Expression keywords:
-syn keyword ahkLogicOperators
-	\ Not Or And
+syn match   autohotkeyDelimiter
+      \ contained
+      \ display
+      \ '::'
 
-" Used with Drive/DriveGet and/or WinGet/WinSet:
-syn keyword ahkWingetFamily
-	\ AlwaysOnTop Topmost Top Bottom Transparent TransColor Redraw Region ID IDLast ProcessName
-	\ MinMax ControlList Count List Capacity StatusCD Eject Lock Unlock Label FileSystem Label
-	\ SetLabel Serial Type Status
+" allowable hotstring options:
+" https://autohotkey.com/docs/Hotstrings.htm
+syn match   autohotkeyHotstringDefinition
+      \ contains=autohotkeyHotstring,
+      \   autohotkeyHotstringDelimiter
+      \ display
+      \ '^\s*:\%([*?]\|[BORZ]0\?\|C[01]\?\|K\d\+\|P\d\+\|S[IPE]\)*:.\{-}::'
 
-" For functions:
-syn keyword ahkScopes
-	\ static global local ByRef
+syn match   autohotkeyHotstring
+      \ contained
+      \ display
+      \ '.\{-}'
 
-" Time units for use with addition and subtraction:
-syn keyword ahkTimeUnits
-	\ Seconds Minutes Hours Days
+syn match   autohotkeyHotstringDelimiter
+      \ contained
+      \ display
+      \ '::'
 
-" For use with the Loop command:
-syn keyword ahkLoop
-	\ Read Parse
+syn match   autohotkeyHotstringDelimiter
+      \ contains=autohotkeyHotstringOptions
+      \ contained
+      \ display
+      \ ':\%([*?]\|[BORZ]0\?\|C[01]\?\|K\d\+\|P\d\+\|S[IPE]\)*:'
 
-" A_ExitReason
-syn keyword ahkExitReasons
-	\ Logoff Close Error Single
+syn match   autohotkeyHotstringOptions
+      \ contained
+      \ display
+      \ '\%([*?]\|[BORZ]0\?\|C[01]\?\|K\d\+\|P\d\+\|S[IPE]\)*'
 
-" Keywords used with the "menu" command:
-syn keyword ahkMenuCommand
-	\ Tray Add Rename Check UnCheck ToggleCheck Enable Disable ToggleEnable
-	\ Default NoDefault Standard NoStandard Color Delete DeleteAll Icon NoIcon Tip
-	\ Click Show MainWindow NoMainWindow UseErrorLevel
+syn cluster autohotkeyCommentGroup
+      \ contains=
+      \   autohotkeyTodo,
+      \   @Spell
 
-" Gui control types (note that Edit, Progress and Hotkey aren't included since they are already command keywords):
-syn keyword ahkGUIcontrol
-	\ Text Picture Pic GroupBox Button Checkbox Radio DropDownList DDL ComboBox
-	\ ListBox ListView DateTime MonthCal Slider StatusBar Tab Tab2 TreeView UpDown
+syn match   autohotkeyComment
+      \ display
+      \ contains=@autohotkeyCommentGroup
+      \ '\%(^;\|\s\+;\).*$'
 
-" ListView:
-syn keyword ahkListView
-	\ IconSmall Tile Report SortDesc NoSort NoSortHdr Grid Hdr AutoSize Range
+syn region  autohotkeyComment
+      \ contains=@autohotkeyCommentGroup
+      \ matchgroup=autohotkeyCommentStart
+      \ start='^\s*/\*'
+      \ end='^\s*\*/'
 
-" General GUI keywords:
-syn keyword ahkGeneralGUI
-	\ xm ym ys xs xp yp Font Resize Owner Submit NoHide Minimize Maximize Restore
-	\ NoActivate NA Cancel Destroy Center Margin MaxSize MinSize OwnDialogs GuiEscape
-	\ GuiClose GuiSize GuiContextMenu GuiDropFiles TabStop Section AltSubmit Wrap
-	\ HScroll VScroll Border Top Bottom Buttons Expand First ImageList Lines
-	\ WantCtrlA WantF2 Vis VisFirst Number Uppercase Lowercase Limit Password Multi
-	\ WantReturn Group Background bold italic strike underline norm BackgroundTrans
-	\ Theme Caption Delimiter MinimizeBox MaximizeBox SysMenu ToolWindow Flash
-	\ Style ExStyle Check3 Checked CheckedGray ReadOnly Password Hidden Left
-	\ Right Center NoTab Section Move Focus Hide Choose ChooseString Text Pos
-	\ Enabled Disabled Visible LastFound LastFoundExist
+" TODO: Shouldn't we look for g:, b:,  variables before defaulting to
+" something?
+if exists("g:autohotkey_syntax_sync_minlines")
+  let b:autohotkey_syntax_sync_minlines = g:autohotkey_syntax_sync_minlines
+else
+  let b:autohotkey_syntax_sync_minlines = 50
+endif
+exec "syn sync ccomment autohotkeyComment minlines=" . b:autohotkey_syntax_sync_minlines
 
-" Keywords used with the Hotkey command:
-syn keyword ahkHotkeyCommand
-	\ AltTab ShiftAltTab AltTabMenu AltTabAndMenu AltTabMenuDismiss
+hi def link autohotkeyTodo                Todo
+hi def link autohotkeyComment             Comment
+hi def link autohotkeyCommentStart        autohotkeyComment
+hi def link autohotkeyEscape              Special
+hi def link autohotkeyHotkey              Type
+hi def link autohotkeyKey                 Type
+hi def link autohotkeyDelimiter           Delimiter
+hi def link autohotkeyHotstringDefinition Type
+hi def link autohotkeyHotstring           Type
+hi def link autohotkeyHotstringDelimiter  autohotkeyDelimiter
+hi def link autohotkeyHotstringOptions    Special
+hi def link autohotkeyString              String
+hi def link autohotkeyStringDelimiter     autohotkeyString
+hi def link autohotkeyVariable            Identifier
+hi def link autohotkeyVariableDelimiter   autohotkeyVariable
+hi def link autohotkeyBuiltinVariable     Macro
+hi def link autohotkeyCommand             Keyword
+hi def link autohotkeyFunction            Function
+hi def link autohotkeyStatement           autohotkeyCommand
+hi def link autohotkeyRepeat              Repeat
+hi def link autohotkeyConditional         Conditional
+hi def link autohotkeyPreProcStart        PreProc
+hi def link autohotkeyInclude             Include
+hi def link autohotkeyPreProc             PreProc
+hi def link autohotkeyMatchClass          Typedef
+hi def link autohotkeyNumber              Number
+hi def link autohotkeyInteger             autohotkeyNumber
+hi def link autohotkeyFloat               autohotkeyNumber
+hi def link autohotkeyType                Type
+hi def link autohotkeyBoolean             Boolean
 
-" Keywords used with the Thread/Process commands
-syn keyword ahkThread
-	\ NoTimers Interrupt Priority WaitClose Wait Exist Close
+let b:current_syntax = "autohotkey"
 
-
-" Keywords used with the Transform command:
-syn keyword ahkTransformCommand
-	\ Unicode Asc Chr Deref Mod Pow Exp Sqrt Log Ln Round Ceil Floor Abs Sin Cos Tan ASin
-	\ ACos ATan BitNot BitAnd BitOr BitXOr BitShiftLeft BitShiftRight
-
-
-" Keywords used with "IfMsgBox" ("continue" is not present here because it's a command too):
-syn keyword ahkButtons
-	\ Yes No Ok Cancel Abort Retry Ignore TryAgain
-
-" Misc. eywords used with various commands:
-syn keyword ahkOn
-	\ On Off All
-
-" Registry root keys:
-syn keyword ahkRegistry
-	\ HKEY_LOCAL_MACHINE HKEY_USERS HKEY_CURRENT_USER HKEY_CLASSES_ROOT HKEY_CURRENT_CONFIG
-	\ HKLM HKU HKCU HKCR HKCC REG_SZ REG_EXPAND_SZ REG_MULTI_SZ REG_DWORD REG_BINARY
-
-
-
-"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-hi def link ahkKeyword Special
-hi def link ahkEscape Special
-hi def link ahkComment Comment
-hi def link ahkStatement Conditional
-hi def link ahkFunction Keyword
-hi def link ahkDirective PreProc "sent keys
-hi def link ahkLabel Label
-hi def link ahkKey Special
-hi def link ahkVariable Constant "this is anything enclosed in %%
-hi def link ahkNewFunction Function
-hi def link ahkBuiltinVariable Macro
-hi def link ahkString String
-hi def link ahkScope Type
-hi def link ahkOtherCommands 			Typedef
-hi def link ahkRelative 				ahkOtherCommands
-hi def link ahkContinuation 			ahkOtherCommands
-hi def link ahkPriority 				ahkOtherCommands
-hi def link ahkWinTitle 				ahkOtherCommands
-hi def link ahkSetFormatFamily 		ahkOtherCommands
-hi def link ahkLogicOperators 		ahkOtherCommands
-hi def link ahkWingetFamily 			ahkOtherCommands
-hi def link ahkScopes 					ahkOtherCommands
-hi def link ahkTimeUnits 				ahkOtherCommands
-hi def link ahkLoop 						ahkOtherCommands
-hi def link ahkExitReasons 			ahkOtherCommands
-hi def link ahkMenuCommand 			ahkOtherCommands
-hi def link ahkGUIcontrol 				ahkOtherCommands
-hi def link ahkListView 				ahkOtherCommands
-hi def link ahkGeneralGUI 				ahkOtherCommands
-hi def link ahkHotkeyCommand 			ahkOtherCommands
-hi def link ahkThread 					ahkOtherCommands
-hi def link ahkTransformCommand 		ahkOtherCommands
-hi def link ahkButtons 					ahkOtherCommands
-hi def link ahkOn 						ahkOtherCommands
-hi def link ahkRegistry 				ahkOtherCommands
-
-sy sync fromstart
-let b:current_syntax = "ahk"
-
+let &cpo = s:cpo_save
+unlet s:cpo_save
