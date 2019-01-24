@@ -2,12 +2,112 @@
 " Description: VIM configuration file
 
 
-source ~/.vim/functions/folds.vim
-source ~/.vim/functions/todos.vim
-source ~/.vim/functions/users.vim
+" Plugins {{{1
+" Vundle {{{2
+" execute pathogen#infect()
+
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'megaannum/forms'
+
+" Git {{{3
+Plugin 'tpope/vim-fugitive'
+" Plugin 'airblade/vim-gitgutter'
+
+" Commenting {{{3
+Plugin 'scrooloose/nerdcommenter'
+
+" File Browser {{{3
+Plugin 'scrooloose/nerdtree'
+Plugin 'junegunn/fzf.vim'
+
+" Auto complete {{{3
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'ervandew/supertab'
+Plugin 'sirver/ultisnips'
+
+" Auto linting {{{3
+Plugin 'w0rp/ale'
+
+" Auto formatting {{{3
+Plugin 'google/yapf'
+Plugin 'pignacio/vim-yapf-format'
+
+" Faster/pretty code {{{3
+Plugin 'tpope/vim-surround'
+" Plugin 'altercation/vim-colors-solarized'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'yggdroot/indentline'
+Plugin 'Raimondi/delimitMate'
+Plugin 'sjl/gundo.vim'
+
+" Bash {{{3
+Plugin 'dbeniamine/cheat.sh-vim'
+
+" Markdown {{{3
+Plugin 'plasticboy/vim-markdown'
+call vundle#end()
+filetype plugin indent on
+
+" CtrlP {{{2
+let g:ctrlp_cmd = 'CtrlPMRU' " Most recent files
+
+" JIRA Complete {{{2
+let g:jira_url = 'https://jira.advmeas.com:8443'
+let g:jira_username = 'travis.gall'
+let g:jira_password = 'AdvMeas2'
+let g:unite_source_issue_jira_priority_table = {
+  \ 10000: '◡', 1: '⚡', 2: 'ᛏ', 3: '●', 4: '○', 5: '▽' }
+let g:unite_source_issue_jira_status_table = {
+  \ 1: 'plan', 3: 'develop', 4: 'reopened', 5: 'resolved', 6: 'closed',
+  \ 10000: 'feedback', 10001: 'staged', 10002: 'waiting',
+  \ 10003: 'deployed', 10004: 'pending', 10008: 'review' }
+let g:unite_source_issue_jira_type_table = {
+  \ 1: 'bug', 2: 'feature', 3: 'task', 4: 'change', 5: 'sub-task',
+  \ 6: 'epic', 7: 'story', 8: 'system', 9: 'sub-bug' }
+
+let g:jiracomplete_url = 'https://jira.advmeas.com:8443'
+let g:jiracomplete_username = 'travis.gall'
+let g:jiracomplete_password = 'AdvMeas2'
+let g:jiracomplete_format = 'v:val.abbr . " -> " . v:val.menu'
+
+" NERD {{{2
+let g:NERDSpaceDelims=1 " One space after auto comment
+" ALE {{{2
+let g:syntastic_php_checkers = ['php', '/bin/phplint']
+let g:syntastic_sh_checkers = ['bashate', 'sh', 'shellcheck']
+let g:syntastic_sh_shellcheck_args = '--external-sources'
+let g:syntastic_vim_checkers = ['vimlint', 'vint']
+let g:syntastic_sql_checkers = ['sqlint']
+let g:syntastic_python_checkers = ['flake8', 'python']
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:ale_set_loclist = 1
+let g:ale_statusline_format = [' %d', ' %d', '⬥ ok']
+let g:ale_sign_error = ''
+let g:ale_sign_warning = ''
+highlight ALEErrorSign ctermbg=NONE ctermfg=red
+highlight ALEWarningSign ctermbg=NONE ctermfg=brown
 
 " Always display the sign column for ALE
 set signcolumn=yes
+
+
+" YAPF {{{2
+let g:yapf_format_yapf_location = '/home/travis/.vim/bundle/yapf'
+
+" Vim scripts {{{1
+source ~/.vim/functions/folds.vim
+source ~/.vim/functions/todos.vim
+source ~/.vim/functions/users.vim
 
 " let g:pymode_python = 'python3'
 
@@ -98,79 +198,6 @@ autocmd! InsertLeave * let didit = 0
 
 " Remove automatic commenting
 set formatoptions-=cro
-
-" Plugins {{{1
-" Pathogen {{{2
-execute pathogen#infect()
-
-set nocompatible
-filetype off
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-
-Plugin 'megaannum/forms'
-Plugin 'rafi/vim-unite-issue'
-Plugin 'mnpk/vim-jira-complete'
-
-" YouCompleteMe
-Plugin 'Valloric/YouCompleteMe'
-
-" Auto linting
-Plugin 'w0rp/ale'
-
-" Auto formatting
-Plugin 'google/yapf'
-Plugin 'pignacio/vim-yapf-format'
-
-call vundle#end()
-filetype plugin indent on
-
-" CtrlP {{{2
-let g:ctrlp_cmd = 'CtrlPMRU' " Most recent files
-
-" JIRA Complete {{{2
-let g:jira_url = 'https://jira.advmeas.com:8443'
-let g:jira_username = 'travis.gall'
-let g:jira_password = 'AdvMeas2'
-let g:unite_source_issue_jira_priority_table = {
-  \ 10000: '◡', 1: '⚡', 2: 'ᛏ', 3: '●', 4: '○', 5: '▽' }
-let g:unite_source_issue_jira_status_table = {
-  \ 1: 'plan', 3: 'develop', 4: 'reopened', 5: 'resolved', 6: 'closed',
-  \ 10000: 'feedback', 10001: 'staged', 10002: 'waiting',
-  \ 10003: 'deployed', 10004: 'pending', 10008: 'review' }
-let g:unite_source_issue_jira_type_table = {
-  \ 1: 'bug', 2: 'feature', 3: 'task', 4: 'change', 5: 'sub-task',
-  \ 6: 'epic', 7: 'story', 8: 'system', 9: 'sub-bug' }
-
-let g:jiracomplete_url = 'https://jira.advmeas.com:8443'
-let g:jiracomplete_username = 'travis.gall'
-let g:jiracomplete_password = 'AdvMeas2'
-let g:jiracomplete_format = 'v:val.abbr . " -> " . v:val.menu'
-
-" NERD {{{2
-let g:NERDSpaceDelims=1 " One space after auto comment
-" ALE {{{2
-let g:syntastic_php_checkers = ['php', '/bin/phplint']
-let g:syntastic_sh_checkers = ['bashate', 'sh', 'shellcheck']
-let g:syntastic_sh_shellcheck_args = '--external-sources'
-let g:syntastic_vim_checkers = ['vimlint', 'vint']
-let g:syntastic_sql_checkers = ['sqlint']
-let g:syntastic_python_checkers = ['flake8', 'python']
-
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:ale_set_loclist = 1
-let g:ale_statusline_format = [' %d', ' %d', '⬥ ok']
-let g:ale_sign_error = ''
-let g:ale_sign_warning = ''
-highlight ALEErrorSign ctermbg=NONE ctermfg=red
-highlight ALEWarningSign ctermbg=NONE ctermfg=brown
-
-" YAPF {{{2
-let g:yapf_format_yapf_location = '/home/travis/.vim/bundle/yapf'
 
 " Key Mappings {{{1
 " VIM {{{2
