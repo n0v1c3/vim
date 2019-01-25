@@ -43,7 +43,7 @@ Plugin 'tpope/vim-surround'
 " Plugin 'altercation/vim-colors-solarized'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'yggdroot/indentline'
-Plugin 'Raimondi/delimitMate'
+" Plugin 'Raimondi/delimitMate'
 Plugin 'sjl/gundo.vim'
 
 " Bash {{{3
@@ -54,22 +54,22 @@ Plugin 'plasticboy/vim-markdown'
 call vundle#end()
 filetype plugin indent on
 
-" CtrlP {{{2
-let g:ctrlp_cmd = 'CtrlPMRU' " Most recent files
+" FZF {{{2
+" let g:ctrlp_cmd = 'CtrlPMRU' " Most recent files
 
 " JIRA Complete {{{2
 let g:jira_url = 'https://jira.advmeas.com:8443'
 let g:jira_username = 'travis.gall'
 let g:jira_password = 'AdvMeas2'
 let g:unite_source_issue_jira_priority_table = {
-  \ 10000: '◡', 1: '⚡', 2: 'ᛏ', 3: '●', 4: '○', 5: '▽' }
+      \ 10000: '◡', 1: '⚡', 2: 'ᛏ', 3: '●', 4: '○', 5: '▽' }
 let g:unite_source_issue_jira_status_table = {
-  \ 1: 'plan', 3: 'develop', 4: 'reopened', 5: 'resolved', 6: 'closed',
-  \ 10000: 'feedback', 10001: 'staged', 10002: 'waiting',
-  \ 10003: 'deployed', 10004: 'pending', 10008: 'review' }
+      \ 1: 'plan', 3: 'develop', 4: 'reopened', 5: 'resolved', 6: 'closed',
+      \ 10000: 'feedback', 10001: 'staged', 10002: 'waiting',
+      \ 10003: 'deployed', 10004: 'pending', 10008: 'review' }
 let g:unite_source_issue_jira_type_table = {
-  \ 1: 'bug', 2: 'feature', 3: 'task', 4: 'change', 5: 'sub-task',
-  \ 6: 'epic', 7: 'story', 8: 'system', 9: 'sub-bug' }
+      \ 1: 'bug', 2: 'feature', 3: 'task', 4: 'change', 5: 'sub-task',
+      \ 6: 'epic', 7: 'story', 8: 'system', 9: 'sub-bug' }
 
 let g:jiracomplete_url = 'https://jira.advmeas.com:8443'
 let g:jiracomplete_username = 'travis.gall'
@@ -133,6 +133,18 @@ set foldtext=v:folddashes.FormatFoldString(v:foldstart)
 " Fonts {{{2
 set guifont=Font\ Awesome\ 14
 
+" Highlights {{{2
+" highlight! link Folded Normal
+" TODO-TJG [190125] - Tweak these to look better
+highlight! Folded ctermfg=102 guifg=#878787 guibg=NONE ctermbg=NONE
+highlight! link FoldColumn Folded
+highlight! link Column Folded
+highlight! link SignColumn Folded
+highlight! link GitGutterAdd Folded
+highlight! link GitGutterChange Folded
+highlight! link GitGutterDelete Folded
+highlight! link GitGutterChangeDelete Folded
+
 " Indents {{{2
 filetype plugin indent on
 set tabstop=2
@@ -172,7 +184,10 @@ set lazyredraw      " Postpone screen redraw until macro completion
 
 set t_Co=256
 syntax on
-colorscheme koehler
+" Handled by the OS
+" colorscheme solorized
+" colorscheme koehler
+
 set background=dark " Dark background for theme
 
 " Wildignore {{{2
@@ -199,6 +214,13 @@ autocmd! InsertLeave * let didit = 0
 " Remove automatic commenting
 set formatoptions-=cro
 
+" Commands {{{1
+" QuickFix/Location List {{{2
+command! Cnext try | cnext | catch | cfirst | catch | endtry
+command! Cprev try | cprev | catch | clast | catch | endtry
+command! Lnext try | lnext | catch | lfirst | catch | endtry
+command! Lprev try | lprev | catch | llast | catch | endtry
+
 " Key Mappings {{{1
 " VIM {{{2
 " Key Overrides
@@ -208,8 +230,8 @@ noremap <silent> p p:SyntasticCheck<cr>
 noremap <silent> u u:SyntasticCheck<cr>
 nnoremap <silent>/ :let hlstate=1<cr>:set hlsearch<cr>:set incsearch<cr>/\v
 nnoremap <silent> H ^
-nnoremap <silent> J }
-noremap <silent> K {
+" nnoremap <silent> J }
+" noremap <silent> K {
 nnoremap <silent> L $
 nnoremap <silent> =G mmgg=G`m
 nnoremap <silent> <c-h> 3zh
@@ -217,21 +239,10 @@ nnoremap <silent> <c-j> 3<c-e>
 nnoremap <silent> <c-k> 3<c-y>
 nnoremap <silent> <c-l> 3zl
 
-" vimrc
-nnoremap <silent> <leader>ev :find $MYVIMRC<cr>
-nnoremap <silent> <leader>sv :source $MYVIMRC<cr>
-
-" TODOs {{{2
-nnoremap <silent> <leader>tf /TODO-<cr>
-nnoremap <silent> <leader>tg mm:call GetLocalTODOs()<cr>`m
-nnoremap <silent> <leader>tG mm:call GetTODOs()<cr>`m
-nnoremap <silent> <leader>ti mmO<C-c>:call setline('.',SetTODO('TJG'))<cr>:call NERDComment(0,'toggle')<cr>==`m
-0
-nnoremap <silent> <leader>td :call TakeTODO('TJG')<cr>
-
-" 'E' Errors {{{2
+" 'E' Edits / Errors {{{2
 nnoremap <silent> <leader>ej :lnext<cr>
 nnoremap <silent> <leader>ek :lprev<cr>
+nnoremap <silent> <leader>ev :find $MYVIMRC<cr>
 
 " 'F' Formating {{{2
 nnoremap <silent> <leader>fu mmviwU`m
@@ -243,16 +254,37 @@ nnoremap <silent> <leader><backspace> mmA<backspace><esc>`m
 nnoremap <leader>gh :execute "help " . "<cword>"<cr> vnoremap <leader>hh :execute "help " . '<'><cr>
 nnoremap <silent> <leader>gf <c-w>vgf
 
-" 'T' Toggles {{{2
+" 'S' Search / Source {{{2
+nnoremap <leader>sf :Files<cr>
+nnoremap <leader>sh :History<cr>
+nnoremap <silent> <leader>sv mm:source $MYVIMRC<cr>`m
+
+" 'T' Tabs / TODOs / Toggles {{{2
+" TODO-TJG [190124] - Tabs need to be created
+" Tabs {{{3
+nnoremap <silent> <leader>tj gt
+nnoremap <silent> <leader>tk gT
+
+" TODOs {{{3
+nnoremap <silent> <leader>tf /TODO-<cr>
+nnoremap <silent> <leader>tg mm:call GetTODOs()<cr>`m
+nnoremap <silent> <leader>ti mmO<C-c>:call setline('.',SetTODO('TJG'))<cr>:call NERDComment(0,'toggle')<cr>==`m
+nnoremap <silent> <leader>tm :call TakeTODO('TJG')<cr>
+
+" Toggles {{{3
 nnoremap <silent> <leader>tc :call NERDComment(0,'toggle')<cr>
 nnoremap <silent> <leader>tl :call <SID>LocationListToggle()<cr>
 nnoremap <silent> <leader>th :call <SID>ToggleHighlighting()<cr>
-nnoremap <silent> <leader>tn :setlocal number!<cr>:setlocal relativenumber!<cr>
 nnoremap <silent> <leader>tq :call <SID>QuickfixListToggle()<cr>
 nnoremap <silent> <leader>tt :NERDTreeToggle<cr>
+nnoremap <silent> <leader>t# :setlocal number!<cr>:setlocal relativenumber!<cr>
 
 " 'W' Windows {{{2
 nnoremap <silent> <leader>w <c-w>
+nnoremap <silent> <leader>wch <c-w>h<c-w>c
+nnoremap <silent> <leader>wcj <c-w>j<c-w>c
+nnoremap <silent> <leader>wck <c-w>k<c-w>c
+nnoremap <silent> <leader>wcl <c-w>l<c-w>c
 
 " 'Z' Folding {{{2
 nnoremap <silent> zC mmggvGzC`m<esc>
