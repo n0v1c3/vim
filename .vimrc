@@ -13,10 +13,12 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 Plugin 'megaannum/forms'
+Plugin 'n0v1c3/vira'
+Plugin 'vim-airline/vim-airline'
 
 " Git {{{3
 Plugin 'tpope/vim-fugitive'
-" Plugin 'airblade/vim-gitgutter'
+Plugin 'airblade/vim-gitgutter'
 
 " Commenting {{{3
 Plugin 'scrooloose/nerdcommenter'
@@ -31,10 +33,10 @@ Plugin 'davidhalter/jedi-vim'
 Plugin 'ervandew/supertab'
 Plugin 'sirver/ultisnips'
 
-" Auto linting {{{3
+" Linting {{{3
 Plugin 'w0rp/ale'
 
-" Auto formatting {{{3
+" Formatting {{{3
 Plugin 'google/yapf'
 Plugin 'pignacio/vim-yapf-format'
 
@@ -43,7 +45,6 @@ Plugin 'tpope/vim-surround'
 " Plugin 'altercation/vim-colors-solarized'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'yggdroot/indentline'
-" Plugin 'Raimondi/delimitMate'
 Plugin 'sjl/gundo.vim'
 
 " Bash {{{3
@@ -86,10 +87,7 @@ let g:syntastic_vim_checkers = ['vimlint', 'vint']
 let g:syntastic_sql_checkers = ['sqlint']
 let g:syntastic_python_checkers = ['flake8', 'python']
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
+let g:ale_lint_on_text_changed = 'never'
 let g:ale_set_loclist = 1
 let g:ale_statusline_format = [' %d', ' %d', '⬥ ok']
 let g:ale_sign_error = ''
@@ -101,9 +99,14 @@ highlight ALEWarningSign ctermbg=NONE ctermfg=brown
 set signcolumn=yes
 
 
+" Vira {{{2
+let g:vira_serv = 'https://jira.boiko.online'
+" let g:vira_serv = 'https://jira.advmeas.com:8443'
+let g:vira_user = 'travis.gall'
+let g:vira_pass = ''
+
 " YAPF {{{2
 let g:yapf_format_yapf_location = '/home/travis/.vim/bundle/yapf'
-
 " Vim scripts {{{1
 source ~/.vim/functions/folds.vim
 source ~/.vim/functions/todos.vim
@@ -165,19 +168,26 @@ set virtualedit=all         " Move cursor to any column on an existing line
 " StatusLine {{{2
 " Always display the status bar
 set laststatus=2
+set ttimeoutlen=50
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#ale#enabled = 1
+let g:airline_section_z = '%{ViraStatusLine()}'
 
 " Flags
-set statusline=%m%r%h
+" set statusline=%m%r%h%t\
+" %{GetFoldStrings()}%=\|%2B\|%3l/%3L\|%{ViraGetActiveIssue()}\|
 " Filename
-set statusline+=%t
+" set statusline+=%t
 " Folds
-set statusline+=\ %{GetFoldStrings()}
+" set statusline+=\ %{GetFoldStrings()}
 " Begin right side
-set statusline+=%=
+" set statusline+=%=
 " Cursor in HEX
-set statusline+=\|%2B\|
+" set statusline+=\|%2B\|
 " Current line
-set statusline+=%3l/%3L\|
+" set statusline+=%3l/%3L\|
+" ActiveJira
+" set statusline+=%{ViraGetActiveIssue()}\|
 
 " Display {{{2
 set lazyredraw      " Postpone screen redraw until macro completion
@@ -279,6 +289,11 @@ nnoremap <silent> <leader>tq :call <SID>QuickfixListToggle()<cr>
 nnoremap <silent> <leader>tt :NERDTreeToggle<cr>
 nnoremap <silent> <leader>t# :setlocal number!<cr>:setlocal relativenumber!<cr>
 
+" 'V' Vira {{{2
+nnoremap <silent> <leader>vc :call ViraInsertComment()<cr>
+nnoremap <silent> <leader>vi :call ViraSetActiveIssue()<cr>
+nnoremap <silent> <leader>vr :call ViraReport()<cr>
+
 " 'W' Windows {{{2
 nnoremap <silent> <leader>w <c-w>
 nnoremap <silent> <leader>wch <c-w>h<c-w>c
@@ -347,8 +362,3 @@ set wildmenu
 set wildmode=full
 source $VIMRUNTIME/menu.vim
 set wildcharm=<C-Z>
-" map <F4> :emenu <C-Z>
-nmap <F2> :call forms#menu#MakeMenu('n')<CR>
-vmap <F2> :call forms#menu#MakeMenu('v')<CR>
-nmap <F3> :call forms#menu#MakePopUp('n')<CR>
-vmap <F3> :call forms#menu#MakePopUp('v')<CR>

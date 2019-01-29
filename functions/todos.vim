@@ -12,7 +12,7 @@ let g:setTodoHeader = 'TODO: '
 
 " Functions {{{1
 " TODO-TJG [171103] - Add current file ONLY option
-function! GetTODOs()
+function! GetTODOs() "{{{2
     " Binary files that can be ignored
     set wildignore+=*.jpg,*.docx,*.xlsm,*.mp4,*.vmdk
     " Seacrch the CWD to find all of your current TODOs
@@ -21,14 +21,12 @@ function! GetTODOs()
     set wildignore-=*.jpg,*.docx,*.xlsm,*.mp4,*.vmdk
 endfunction
 
-" Insert a new TODOs
-function! SetTODO(initials)
+function! SetTODO(initials) " Insert a new TODOs {{{2
     " Return the TODOs string
     return 'TODO-' . a:initials .' [' . strftime('%y%m%d') . '] - ' . UserInput(g:setTodoHeader)
 endfunction
 
 " TODO-TJG [171105] - Make this more general
-" Set your initials to a current TODOs
-function! TakeTODO(initials)
+function! TakeTODO(initials) " Set your initials to a current TODO {{{2
     execute "normal! 0fTct\<space>TODO-" . a:initials . "\<esc>"
 endfunction
