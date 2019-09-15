@@ -85,7 +85,6 @@ let g:yapf_format_yapf_location = '$HOME/.vim/bundle/yapf'
 
 " Vim scripts {{{1
 source ~/.vim/functions/folds.vim
-source ~/.vim/functions/todos.vim
 source ~/.vim/functions/users.vim
 
 function! s:ToggleHighlighting()
@@ -126,7 +125,10 @@ set guifont=Font\ Awesome\ 14
 
 " Highlights {{{2
 " highlight! link Folded Normal
-" TODO-TJG [190125] - Tweak these to look better
+" TODOs {{{3
+highlight! TODO ctermbg=green ctermfg=black
+
+" Folding {{{3
 highlight! Folded ctermfg=102 guifg=#878787 guibg=NONE ctermbg=NONE
 highlight! link FoldColumn Folded
 highlight! link Column Folded
@@ -232,17 +234,11 @@ nnoremap <leader>sf :Files<cr>
 nnoremap <leader>sh :History<cr>
 nnoremap <silent> <leader>sv mm:source $MYVIMRC<cr>`m
 
-" 'T' Tabs / TODOs / Toggles {{{2
-" TODO-TJG [190124] - Tabs need to be created
+" 'T' Tabs / Toggles {{{2
 " Tabs {{{3
+" TODO-TJG [190124] - Tabs need to be created
 nnoremap <silent> <leader>tj gt
 nnoremap <silent> <leader>tk gT
-
-" TODOs {{{3
-nnoremap <silent> <leader>tf /TODO-<cr>
-nnoremap <silent> <leader>tg mm:call GetTODOs()<cr>`m
-nnoremap <silent> <leader>ti mmO<C-c>:call setline('.',SetTODO('TJG'))<cr>:call NERDComment(0,'toggle')<cr>==`m
-nnoremap <silent> <leader>tm :call TakeTODO('TJG')<cr>
 
 " Toggles {{{3
 nnoremap <silent> <leader>tc :call NERDComment(0,'toggle')<cr>
@@ -276,9 +272,6 @@ nnoremap <silent> <leader><leader> za
 " ALL MY VIMRC WAS IN HERE {{{1
 function _blockcomment()
 " Format {{{1
-" TODOs {{{2
-highlight TODO ctermbg=green ctermfg=black
-
 " Quick Attention {{{2
 highlight Attention ctermbg=yellow ctermfg=black
 
