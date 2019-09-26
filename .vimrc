@@ -5,32 +5,46 @@
 " Vundle {{{2
 " execute pathogen#infect()
 
+function! BuildYCM(info) " {{{3
+  " Build YouCompleteMe after vim-plug clones the repo
+  " info is a dictionary with 3 fields
+  " - name:   name of the plugin
+  " - status: 'installed', 'updated', or 'unchanged'
+  " - force:  set on PlugInstall! or PlugUpdate!
+  if a:info.status == 'installed' || a:info.force
+    if has("unix")
+      !./install.py --all
+      " !./install.py --cs-completer --js-completer
+    else
+      !.\install.py --all
+    endif
+  endif
+endfunction
+
 set nocompatible
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'johngrib/vim-game-snake'
-Plugin 'johngrib/vim-game-code-break'
-Plugin 'kien/ctrlp.vim'
 
 " Plugin 'megaannum/forms'
-Plugin 'n0v1c3/vira'
 Plugin 'vim-airline/vim-airline'
 
 " Git {{{3
-Plugin 'tpope/vim-fugitive'
 Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-fugitive'
+Plugin 'n0v1c3/vira'
 
 " Commenting {{{3
 Plugin 'scrooloose/nerdcommenter'
 
 " File Browser {{{3
+Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'junegunn/fzf.vim'
 
 " Auto complete {{{3
-Plugin 'Valloric/YouCompleteMe'
+Plugin 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') } " Auto-completion
 Plugin 'davidhalter/jedi-vim'
 Plugin 'ervandew/supertab'
 Plugin 'sirver/ultisnips'
@@ -44,7 +58,7 @@ Plugin 'pignacio/vim-yapf-format'
 
 " Faster/pretty code {{{3
 Plugin 'tpope/vim-surround'
-" Plugin 'altercation/vim-colors-solarized'
+Plugin 'altercation/vim-colors-solarized'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'yggdroot/indentline'
 Plugin 'sjl/gundo.vim'
@@ -54,6 +68,7 @@ Plugin 'dbeniamine/cheat.sh-vim'
 
 " Markdown {{{3
 Plugin 'plasticboy/vim-markdown'
+
 call vundle#end()
 filetype plugin indent on
 
@@ -87,7 +102,7 @@ let g:yapf_format_yapf_location = '$HOME/.vim/bundle/yapf'
 source ~/.vim/functions/folds.vim
 source ~/.vim/functions/users.vim
 
-function! s:ToggleHighlighting()
+function! s:ToggleHighlighting() " {{{2
   if g:hlstate
     call feedkeys(":nohlsearch\<cr>")
     let g:hlstate = 0
@@ -96,6 +111,46 @@ function! s:ToggleHighlighting()
     let g:hlstate = 1
   endif
 endfunction
+
+function! s:QuickfixListToggle() " {{{2
+  if g:quickfixlist_open
+    execute g:quickfixlist_return_to_window . 'wincmd w'
+    let g:quickfixlist_open=0
+    cclose
+  else
+    let g:quickfixlist_return_to_window = winnr()
+    let g:quickfixlist_open=1
+    copen 5
+  endif
+endfunction
+
+" Location List Toggle
+function! s:LocationListToggle() " {{{2
+  if g:locationlist_open
+    execute g:locationlist_return_to_window . 'wincmd w'
+    let g:locationlist_open=0
+    lclose
+  else
+    let g:locationlist_return_to_window = winnr()
+    let g:locationlist_open=1
+    lopen 5
+  endif
+endfunction
+
+" Format {{{1
+" Quick Attention {{{2
+" highlight Attention ctermbg=yellow ctermfg=black
+
+" StatusLine {{{2
+" highlight StatusLine ctermbg=black ctermfg=lightgreen
+" highlight StatusLineNC ctermbg=lightgreen ctermfg=black
+
+" Test Functions {{{1
+" Quickfix List Toggle
+" set wildmenu
+" set wildmode=full
+" source $VIMRUNTIME/menu.vim
+" set wildcharm=<C-Z>
 
 " Configuration {{{1
 " Global {{{2
@@ -125,9 +180,6 @@ set guifont=Font\ Awesome\ 14
 
 " Highlights {{{2
 " highlight! link Folded Normal
-" TODOs {{{3
-highlight! TODO ctermbg=green ctermfg=black
-
 " Folding {{{3
 highlight! Folded ctermfg=102 guifg=#878787 guibg=NONE ctermbg=NONE
 highlight! link FoldColumn Folded
@@ -138,12 +190,23 @@ highlight! link GitGutterChange Folded
 highlight! link GitGutterDelete Folded
 highlight! link GitGutterChangeDelete Folded
 
+" TODOs {{{3
+" highlight! TODO ctermbg=green ctermfg=black
+
+" Whitespace {{{3
+highlight WhiteSpace ctermbg=yellow
+match WhiteSpace /\v\s+$/
+
 " Indents {{{2
 filetype plugin indent on
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
-set expandtab
+set tabstop=2               " Tab width
+set softtabstop=2           " Tab width
+set shiftwidth=2            " Tab width
+set expandtab               " Replace tabs with spaces
+set smarttab                " Delete spaces like tabs
+
+" Search {{{2
+set incsearch               " Search as characters are entered
 
 " Navigation {{{2
 set listchars+=extends:>    " Display symbol for extended information
@@ -165,14 +228,11 @@ let g:airline_section_z = '%{ViraStatusLine()}'
 
 " Display {{{2
 " Postpone screen redraw until macro completion
-set lazyredraw
-set t_Co=256
-syntax on
-" Handled by the OS
-" colorscheme solorized
-" colorscheme koehler
-
-set background=dark " Dark background for theme
+set lazyredraw              " Postpone screen redraw until macro completion
+set t_Co=256                " 256 color
+syntax on                   " Highlighting requirement
+colorscheme solarized       " Public color scheme
+set background=dark         " Dark background for theme
 
 " Wildignore {{{2
 " Ignore these files when expanding wildcards
@@ -198,12 +258,11 @@ command! Lprev try | lprev | catch | llast | catch | endtry
 
 " Key Mappings {{{1
 " VIM {{{2
-" Key Overrides
 noremap j gj
 noremap k gk
 noremap <silent> p p:SyntasticCheck<cr>
 noremap <silent> u u:SyntasticCheck<cr>
-nnoremap / :set hlsearch<cr>:let g:hlstate=1<cr>:set incsearch<cr>/
+nnoremap / :set hlsearch<cr>:let g:hlstate=1<cr>/
 nnoremap <silent> H ^
 " nnoremap <silent> J }
 " noremap <silent> K {
@@ -215,9 +274,10 @@ nnoremap <silent> <c-k> 3<c-y>
 nnoremap <silent> <c-l> 3zl
 
 " 'E' Edits / Errors {{{2
+nnoremap <silent> <leader>ev :find $MYVIMRC<cr>
+
 nnoremap <silent> <leader>ej :lnext<cr>
 nnoremap <silent> <leader>ek :lprev<cr>
-nnoremap <silent> <leader>ev :find $MYVIMRC<cr>
 
 " 'F' Formating {{{2
 nnoremap <silent> <leader>fu mmviwU`m
@@ -232,15 +292,16 @@ nnoremap <silent> <leader>gf <c-w>vgf
 " 'S' Search / Source {{{2
 nnoremap <leader>sf :Files<cr>
 nnoremap <leader>sh :History<cr>
+nnoremap <leader>sw :set ignorecase<cr>:set hlsearch<cr>:let g:hlstate=1<cr>/
+nnoremap <leader>sW :set noignorecase<cr>:set hlsearch<cr>:let g:hlstate=1<cr>/
+
 nnoremap <silent> <leader>sv mm:source $MYVIMRC<cr>`m
 
 " 'T' Tabs / Toggles {{{2
-" Tabs {{{3
 " TODO-TJG [190124] - Tabs need to be created
 nnoremap <silent> <leader>tj gt
 nnoremap <silent> <leader>tk gT
 
-" Toggles {{{3
 nnoremap <silent> <leader>tc :call NERDComment(0,'toggle')<cr>
 nnoremap <silent> <leader>tl :call <SID>LocationListToggle()<cr>
 nnoremap <silent> <leader>th :call <SID>ToggleHighlighting()<cr>
@@ -251,6 +312,7 @@ nnoremap <silent> <leader>t# :setlocal number!<cr>:setlocal relativenumber!<cr>
 " 'V' Vira {{{2
 nnoremap <silent> <leader>vc :ViraComment<cr>
 nnoremap <silent> <leader>vi :ViraSetIssue<cr>
+nnoremap <silent> <leader>vI :ViraAddIssue<cr>
 nnoremap <silent> <leader>vp :ViraSetProject<cr>
 nnoremap <silent> <leader>vr :ViraGetReport<cr>
 nnoremap <silent> <leader>vs :ViraSetServer<cr>
@@ -268,50 +330,3 @@ nnoremap <silent> <leader>wcl <c-w>l<c-w>c
 nnoremap <silent> zC mmggvGzC`m<esc>
 nnoremap <silent> zO mmggvGzO`m
 nnoremap <silent> <leader><leader> za
-
-" ALL MY VIMRC WAS IN HERE {{{1
-function _blockcomment()
-" Format {{{1
-" Quick Attention {{{2
-highlight Attention ctermbg=yellow ctermfg=black
-
-" StatusLine {{{2
-highlight StatusLine ctermbg=black ctermfg=lightgreen
-highlight StatusLineNC ctermbg=lightgreen ctermfg=black
-
-" Whitespace {{{2
-highlight WhiteSpace ctermbg=yellow
-match WhiteSpace /\v\s+$/
-
-" Test Functions {{{1
-" Quickfix List Toggle
-function! s:QuickfixListToggle()
-  if g:quickfixlist_open
-    execute g:quickfixlist_return_to_window . 'wincmd w'
-    let g:quickfixlist_open=0
-    cclose
-  else
-    let g:quickfixlist_return_to_window = winnr()
-    let g:quickfixlist_open=1
-    copen 5
-  endif
-endfunction
-
-" Location List Toggle
-function! s:LocationListToggle()
-  if g:locationlist_open
-    execute g:locationlist_return_to_window . 'wincmd w'
-    let g:locationlist_open=0
-    lclose
-  else
-    let g:locationlist_return_to_window = winnr()
-    let g:locationlist_open=1
-    lopen 5
-  endif
-endfunction
-
-set wildmenu
-set wildmode=full
-source $VIMRUNTIME/menu.vim
-set wildcharm=<C-Z>
-endfunction

@@ -1,5 +1,6 @@
 *.swp
 *.tmp
 
+.virarc
 bundle/
 autoload/pathogen.vim
