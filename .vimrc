@@ -13,8 +13,8 @@ function! BuildYCM(info) " {{{3
   " - force:  set on PlugInstall! or PlugUpdate!
   if a:info.status == 'installed' || a:info.force
     if has("unix")
-      !./install.py --all
       " !./install.py --cs-completer --js-completer
+      !~/.vim/bundle/YouComplteMe/install.py --all
     else
       !.\install.py --all
     endif
@@ -26,6 +26,9 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
+Plugin 'kalekundert/vim-coiled-snake'
+Plugin 'Konfekt/FastFold'
+
 
 " Plugin 'megaannum/forms'
 Plugin 'vim-airline/vim-airline'
@@ -68,6 +71,7 @@ Plugin 'dbeniamine/cheat.sh-vim'
 
 " Markdown {{{3
 Plugin 'plasticboy/vim-markdown'
+Plugin 'masukomi/vim-markdown-folding'
 
 call vundle#end()
 filetype plugin indent on
@@ -102,14 +106,21 @@ let g:yapf_format_yapf_location = '$HOME/.vim/bundle/yapf'
 source ~/.vim/functions/folds.vim
 source ~/.vim/functions/users.vim
 
-function! s:ToggleHighlighting() " {{{2
+" Test Functions {{{1
+" Quickfix List Toggle
+" set wildmenu
+" set wildmode=full
+" source $VIMRUNTIME/menu.vim
+" set wildcharm=<C-Z>
+
+" Functions {{{1
+function! s:ToggleHighlight() " {{{2
   if g:hlstate
     call feedkeys(":nohlsearch\<cr>")
-    let g:hlstate = 0
   else
     call feedkeys(":set hlsearch\<cr>")
-    let g:hlstate = 1
   endif
+  let g:hlstate = !g:hlstate
 endfunction
 
 function! s:QuickfixListToggle() " {{{2
@@ -144,13 +155,6 @@ endfunction
 " StatusLine {{{2
 " highlight StatusLine ctermbg=black ctermfg=lightgreen
 " highlight StatusLineNC ctermbg=lightgreen ctermfg=black
-
-" Test Functions {{{1
-" Quickfix List Toggle
-" set wildmenu
-" set wildmode=full
-" source $VIMRUNTIME/menu.vim
-" set wildcharm=<C-Z>
 
 " Configuration {{{1
 " Global {{{2
@@ -302,22 +306,31 @@ nnoremap <silent> <leader>sv mm:source $MYVIMRC<cr>`m
 nnoremap <silent> <leader>tj gt
 nnoremap <silent> <leader>tk gT
 
-nnoremap <silent> <leader>tc :call NERDComment(0,'toggle')<cr>
+nnoremap <silent> <leader>t# :setlocal number!<cr>:setlocal relativenumber!<cr>
+nnoremap <silent> <leader>th :call <SID>ToggleHighlight()<cr>
 nnoremap <silent> <leader>tl :call <SID>LocationListToggle()<cr>
-nnoremap <silent> <leader>th :call <SID>ToggleHighlighting()<cr>
 nnoremap <silent> <leader>tq :call <SID>QuickfixListToggle()<cr>
 nnoremap <silent> <leader>tt :NERDTreeToggle<cr>
-nnoremap <silent> <leader>t# :setlocal number!<cr>:setlocal relativenumber!<cr>
+noremap <silent> <leader>tc :call NERDComment(0,'toggle')<cr>
 
 " 'V' Vira {{{2
-nnoremap <silent> <leader>vc :ViraComment<cr>
-nnoremap <silent> <leader>vi :ViraSetIssue<cr>
-nnoremap <silent> <leader>vI :ViraAddIssue<cr>
-nnoremap <silent> <leader>vp :ViraSetProject<cr>
-nnoremap <silent> <leader>vr :ViraGetReport<cr>
-nnoremap <silent> <leader>vs :ViraSetServer<cr>
-nnoremap <silent> <leader>vt :ViraGetTodo<cr>
+nnoremap <silent> <leader>vI :ViraIssue<cr>
 nnoremap <silent> <leader>vT :ViraTodo<cr>
+nnoremap <silent> <leader>vb :ViraBrowse<cr>
+nnoremap <silent> <leader>vc :ViraComment<cr>
+nnoremap <silent> <leader>ve :ViraEpics<cr>
+nnoremap <silent> <leader>vi :ViraIssues<cr>
+nnoremap <silent> <leader>vr :ViraReport<cr>
+nnoremap <silent> <leader>vs :ViraServers<cr>
+nnoremap <silent> <leader>vt :ViraTodos<cr>
+
+" Search filters
+nnoremap <silent> <leader>vfa :ViraAssignees<cr>
+nnoremap <silent> <leader>vfp :ViraPriorities<cr>
+nnoremap <silent> <leader>vfp :ViraProjects<cr>
+nnoremap <silent> <leader>vfs :ViraStatuses<cr>
+nnoremap <silent> <leader>vft :ViraTypes<cr>
+nnoremap <silent> <leader>vfu :ViraUsers<cr>
 
 " 'W' Windows {{{2
 nnoremap <silent> <leader>w <c-w>
