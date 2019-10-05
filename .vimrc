@@ -301,6 +301,7 @@ nnoremap <silent> <leader>gB :Gblame<cr><c-w>lzz
 nnoremap <silent> <leader>gc :Gcommit<cr>
 nnoremap <silent> <leader>gC :Git add .<cr>:Gcommit<cr>
 nnoremap <silent> <leader>gd :Gvdiffsplit<cr>
+nnoremap <silent> <leader>gD :Gvdiffsplit master<cr>
 nnoremap <silent> <leader>gM :Gmerge master<cr>
 nnoremap <silent> <leader>gs :Gstatus<cr>
 nnoremap <silent> <leader>gp :Git push<cr>
