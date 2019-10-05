@@ -298,10 +298,11 @@ nnoremap <silent> <leader>ga :Git add .<cr>
 nnoremap <silent> <leader>gl :GV<cr>
 nnoremap <silent> <leader>gb :Gblame<cr><c-w>lzz
 nnoremap <silent> <leader>gc :Gcommit<cr>
-nnoremap <silent> <leader>gC :Git add .<cr>:Gcommit<cr>
+nnoremap <silent> <leader>gC :Git add .<cr>:Gcommit<cr>:ViraComment
 nnoremap <silent> <leader>gd :Gvdiffsplit<cr>
 nnoremap <silent> <leader>gm :Gmerge<cr>
 nnoremap <silent> <leader>gs :Gstatus<cr>
+nnoremap <silent> <leader>gp :Git push .<cr>
 
 nnoremap <silent> <leader>gf <c-w>vgf
 
