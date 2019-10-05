@@ -294,15 +294,17 @@ nnoremap <silent> <leader>; mmA;<esc>`m
 nnoremap <silent> <leader><backspace> mmA<backspace><esc>`m
 
 " 'G' Git / Go {{{2
-nnoremap <silent> <leader>ga :Git add .<cr>
+nnoremap <silent> <leader>ga :Git add .<cr><cr>
+nnoremap <silent> <leader>gb :execut("Git checkout -b " . input("Branch: "))<cr>
 nnoremap <silent> <leader>gl :GV<cr>
-nnoremap <silent> <leader>gb :Gblame<cr><c-w>lzz
+nnoremap <silent> <leader>gB :Gblame<cr><c-w>lzz
 nnoremap <silent> <leader>gc :Gcommit<cr>
-nnoremap <silent> <leader>gC :Git add .<cr>:Gcommit<cr>:ViraComment
+nnoremap <silent> <leader>gC :Git add .<cr>:Gcommit<cr>
 nnoremap <silent> <leader>gd :Gvdiffsplit<cr>
-nnoremap <silent> <leader>gm :Gmerge<cr>
+nnoremap <silent> <leader>gD :Gvdiffsplit master<cr>
+nnoremap <silent> <leader>gM :Gmerge master<cr>
 nnoremap <silent> <leader>gs :Gstatus<cr>
-nnoremap <silent> <leader>gp :Git push .<cr>
+nnoremap <silent> <leader>gp :Git push<cr>
 
 nnoremap <silent> <leader>gf <c-w>vgf
 
