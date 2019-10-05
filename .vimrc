@@ -160,7 +160,7 @@ endfunction
 " Global {{{2
 let g:mapleader="\<space>"
 let g:maplocalleader='-'
-let g:foldcolumn_init=4
+" let g:foldcolumn_init=4
 let g:quickfixlist_open=0
 let g:locationlist_open=0
 let g:quifixlist_height=5
@@ -168,7 +168,7 @@ let g:hlstate = 1
 
 " Folds {{{2
 set foldenable
-let &foldcolumn=g:foldcolumn_init
+" let &foldcolumn=g:foldcolumn_init
 set foldlevel=1
 set foldlevelstart=1
 set foldmethod=marker
@@ -262,16 +262,20 @@ command! Lprev try | lprev | catch | llast | catch | endtry
 
 " Key Mappings {{{1
 " VIM {{{2
-noremap j gj
-noremap k gk
+noremap <silent> j gj
+noremap <silent> k gk
 noremap <silent> p p:SyntasticCheck<cr>
+noremap <silent> <leader>qa :qa<cr>
 noremap <silent> u u:SyntasticCheck<cr>
 nnoremap / :set hlsearch<cr>:let g:hlstate=1<cr>/
-nnoremap <silent> H ^
+nnoremap <silent> <leader>l l
+nnoremap <silent> <leader>h h
+" nnoremap <silent> H ^
 " nnoremap <silent> J }
 " noremap <silent> K {
-nnoremap <silent> L $
+" nnoremap <silent> L $
 nnoremap <silent> =G mmgg=G`m
+nnoremap <silent> <leader>0 mm0`m
 nnoremap <silent> <c-h> 3zh
 nnoremap <silent> <c-j> 3<c-e>
 nnoremap <silent> <c-k> 3<c-y>
@@ -289,8 +293,16 @@ nnoremap <silent> <leader>fl mmviwu`m
 nnoremap <silent> <leader>; mmA;<esc>`m
 nnoremap <silent> <leader><backspace> mmA<backspace><esc>`m
 
-" 'G' Go {{{2
-nnoremap <leader>gh :execute "help " . "<cword>"<cr> vnoremap <leader>hh :execute "help " . '<'><cr>
+" 'G' Git / Go {{{2
+nnoremap <silent> <leader>ga :Git add .<cr>
+nnoremap <silent> <leader>gl :GV<cr>
+nnoremap <silent> <leader>gb :Gblame<cr><c-w>lzz
+nnoremap <silent> <leader>gc :Gcommit<cr>
+nnoremap <silent> <leader>gC :Git add .<cr>:Gcommit<cr>
+nnoremap <silent> <leader>gd :Gvdiffsplit<cr>
+nnoremap <silent> <leader>gm :Gmerge<cr>
+nnoremap <silent> <leader>gs :Gstatus<cr>
+
 nnoremap <silent> <leader>gf <c-w>vgf
 
 " 'S' Search / Source {{{2
@@ -320,17 +332,18 @@ nnoremap <silent> <leader>vb :ViraBrowse<cr>
 nnoremap <silent> <leader>vc :ViraComment<cr>
 nnoremap <silent> <leader>ve :ViraEpics<cr>
 nnoremap <silent> <leader>vi :ViraIssues<cr>
+nnoremap <silent> <leader>vq :ViraQuit<cr>
 nnoremap <silent> <leader>vr :ViraReport<cr>
 nnoremap <silent> <leader>vs :ViraServers<cr>
 nnoremap <silent> <leader>vt :ViraTodos<cr>
 
 " Search filters
-nnoremap <silent> <leader>vfa :ViraAssignees<cr>
-nnoremap <silent> <leader>vfp :ViraPriorities<cr>
-nnoremap <silent> <leader>vfp :ViraProjects<cr>
-nnoremap <silent> <leader>vfs :ViraStatuses<cr>
-nnoremap <silent> <leader>vft :ViraTypes<cr>
-nnoremap <silent> <leader>vfu :ViraUsers<cr>
+nnoremap <silent> <leader>vfP :ViraFilterPriorities<cr>
+nnoremap <silent> <leader>vfa :ViraFilterAssignees<cr>
+nnoremap <silent> <leader>vfp :ViraFilterProjects<cr>
+nnoremap <silent> <leader>vfr :ViraFilterReset<cr>
+nnoremap <silent> <leader>vfs :ViraFilterStatuses<cr>
+nnoremap <silent> <leader>vft :ViraFilterTypes<cr>
 
 " 'W' Windows {{{2
 nnoremap <silent> <leader>w <c-w>
