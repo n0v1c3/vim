@@ -24,57 +24,59 @@ endfunction
 set nocompatible
 filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'kalekundert/vim-coiled-snake'
-Plugin 'Konfekt/FastFold'
+call plug#begin('~/.vim/plugged')
+Plug 'junegunn/vim-plug.vim'
+Plug 'kalekundert/vim-coiled-snake'
+" Plug 'Konfekt/FastFold'
 
 
-" Plugin 'megaannum/forms'
-Plugin 'vim-airline/vim-airline'
+" Plug 'megaannum/forms'
+Plug 'vim-airline/vim-airline'
 
 " Git {{{3
-Plugin 'airblade/vim-gitgutter'
-Plugin 'tpope/vim-fugitive'
-Plugin 'n0v1c3/vira'
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
+Plug 'n0v1c3/vira', { 'do': './install.sh' }
 
 " Commenting {{{3
-Plugin 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdcommenter'
 
 " File Browser {{{3
-Plugin 'kien/ctrlp.vim'
-Plugin 'scrooloose/nerdtree'
-Plugin 'junegunn/fzf.vim'
+Plug 'kien/ctrlp.vim'
+Plug 'scrooloose/nerdtree'
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 
 " Auto complete {{{3
-Plugin 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') } " Auto-completion
-Plugin 'davidhalter/jedi-vim'
-Plugin 'ervandew/supertab'
-Plugin 'sirver/ultisnips'
+Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') } " Auto-completion
+Plug 'davidhalter/jedi-vim'
+Plug 'ervandew/supertab'
+"Plug 'SirVer/ultisnips'
 
 " Linting {{{3
-Plugin 'w0rp/ale'
+Plug 'w0rp/ale'
 
 " Formatting {{{3
-Plugin 'google/yapf'
-Plugin 'pignacio/vim-yapf-format'
+Plug 'google/yapf'
+" Plug 'pignacio/vim-yapf-format'
 
 " Faster/pretty code {{{3
-Plugin 'tpope/vim-surround'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'yggdroot/indentline'
-Plugin 'sjl/gundo.vim'
+Plug 'tpope/vim-surround'
+Plug 'altercation/vim-colors-solarized'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'yggdroot/indentline'
+Plug 'sjl/gundo.vim'
 
 " Bash {{{3
-Plugin 'dbeniamine/cheat.sh-vim'
+Plug 'dbeniamine/cheat.sh-vim'
 
 " Markdown {{{3
-Plugin 'plasticboy/vim-markdown'
-Plugin 'masukomi/vim-markdown-folding'
+Plug 'plasticboy/vim-markdown'
+" Plug 'masukomi/vim-markdown-folding'
 
-call vundle#end()
-filetype plugin indent on
+call plug#end()
+" filetype plugin indent on
 
 " ALE {{{2
 let g:ale_lint_on_text_changed = 'never'
@@ -245,6 +247,11 @@ set wildignore+=*/oh-my-zsh/.*
 set wildignore+=*/.oh-my-zsh/.*
 set wildignore+=*.swp
 
+" Vira {{{2
+" Use YAML files
+let g:vira_config_file_servers = $HOME . '/.config/vira/vira_servers.yaml'
+let g:vira_config_file_projects = $HOME . '/.config/vira/vira_projects.yaml'
+
 " AutoGroups {{{1
 " AutoHotKey {{{2
 augroup AHK
@@ -307,6 +314,9 @@ nnoremap <silent> <leader>gs :Gstatus<cr>
 nnoremap <silent> <leader>gp :Git push<cr>
 
 nnoremap <silent> <leader>gf <c-w>vgf
+
+" 'P' Plug {{{2
+nnoremap <leader>pu :PlugInstall<cr>:PlugUpdate<cr>
 
 " 'S' Search / Source {{{2
 nnoremap <leader>sf :Files<cr>
