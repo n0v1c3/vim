@@ -72,13 +72,23 @@ Plug 'sjl/gundo.vim'
 Plug 'dbeniamine/cheat.sh-vim'
 
 " Markdown {{{3
-Plug 'plasticboy/vim-markdown'
-" Plug 'masukomi/vim-markdown-folding'
+" Plug 'plasticboy/vim-markdown'
+Plug 'masukomi/vim-markdown-folding'
 
 call plug#end()
 " filetype plugin indent on
 
 " ALE {{{2
+let g:ale_fixers = {
+      \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+      \ 'markdown': ['prettier'],
+      \ 'python': ['yapf'],
+      \ 'yaml': ['prettier']
+      \ }
+let g:ale_linters = {
+      \ 'python': ['flake8'],
+      \ 'vim': ['vint']
+      \ }
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_set_loclist = 1
 let g:ale_statusline_format = [' %d', ' %d', '⬥ ok']
