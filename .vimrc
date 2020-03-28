@@ -59,6 +59,7 @@ Plug 'w0rp/ale'
 
 " Formatting {{{3
 Plug 'google/yapf'
+Plug 'OmniSharp/omnisharp-vim'
 " Plug 'pignacio/vim-yapf-format'
 
 " Faster/pretty code {{{3
@@ -87,7 +88,8 @@ let g:ale_fixers = {
       \ }
 let g:ale_linters = {
       \ 'python': ['flake8'],
-      \ 'vim': ['vint']
+      \ 'vim': ['vint'],
+      \ 'cs': ['omnisharp']
       \ }
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_set_loclist = 1
@@ -97,6 +99,12 @@ let g:ale_sign_warning = ''
 highlight ALEErrorSign ctermbg=NONE ctermfg=red
 highlight ALEWarningSign ctermbg=NONE ctermfg=brown
 set signcolumn=yes
+
+" OmniSharp {{{2
+let g:OmniSharp_selector_ui = 'ctrlp'
+let g:OmniSharp_timeout = 2
+let g:OmniSharp_server_use_mono = 1
+let g:OmniSharp_server_stdio = 1
 
 " CtrlP {{{2
 let g:ctrlp_cmd = 'CtrlPMRU' " Most recent files
@@ -364,7 +372,8 @@ nnoremap <silent> <leader>vt :ViraTodos<cr>
 nnoremap <silent> <leader>vfP :ViraFilterPriorities<cr>
 nnoremap <silent> <leader>vfa :ViraFilterAssignees<cr>
 nnoremap <silent> <leader>vfp :ViraFilterProjects<cr>
-nnoremap <silent> <leader>vfr :ViraFilterReset<cr>
+nnoremap <silent> <leader>vfr :ViraFilterReporter<cr>
+nnoremap <silent> <leader>vfR :ViraFilterReset<cr>
 nnoremap <silent> <leader>vfs :ViraFilterStatuses<cr>
 nnoremap <silent> <leader>vft :ViraFilterTypes<cr>
 
