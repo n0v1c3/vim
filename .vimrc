@@ -363,7 +363,9 @@ noremap <silent> <leader>tc :call NERDComment(0,'toggle')<cr>
 " 'V' Vira {{{2
 nnoremap <silent> <leader>vI :ViraIssue<cr>
 nnoremap <silent> <leader>vT :ViraTodo<cr>
-nnoremap <silent> <leader>vb :ViraBrowse<cr>
+" nnoremap <silent> <leader>vb :ViraBrowse<cr>
+nnoremap <silent> <leader>vgb :execut("Git branch " . ViraStatusLine())<cr>
+nnoremap <silent> <leader>vgc :execut("Git checkout " . ViraStatusLine())<cr>
 nnoremap <silent> <leader>vc :ViraComment<cr>
 nnoremap <silent> <leader>ve :ViraEpics<cr>
 nnoremap <silent> <leader>vi :ViraIssues<cr>
