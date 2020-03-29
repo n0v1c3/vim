@@ -28,7 +28,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/vim-plug.vim'
 Plug 'kalekundert/vim-coiled-snake'
 " Plug 'Konfekt/FastFold'
-
+Plug 'JamshedVesuna/vim-markdown-preview'
 
 " Plug 'megaannum/forms'
 Plug 'vim-airline/vim-airline'
@@ -59,6 +59,8 @@ Plug 'w0rp/ale'
 
 " Formatting {{{3
 Plug 'google/yapf'
+" Plug 'beanworks/vim-phpfmt'
+Plug 'chiel92/vim-autoformat'
 " Plug 'pignacio/vim-yapf-format'
 
 " Faster/pretty code {{{3
@@ -319,9 +321,11 @@ nnoremap <silent> <leader>gc :Gcommit<cr>
 nnoremap <silent> <leader>gC :Git add .<cr>:Gcommit<cr>
 nnoremap <silent> <leader>gd :Gvdiffsplit<cr>
 nnoremap <silent> <leader>gD :Gvdiffsplit master<cr>
+nnoremap <silent> <leader>gm :Gmerge --no-ff<space>
 nnoremap <silent> <leader>gM :Gmerge master<cr>
-nnoremap <silent> <leader>gs :Gstatus<cr>
 nnoremap <silent> <leader>gp :Git push<cr>
+nnoremap <silent> <leader>gP :Git pull<cr>
+nnoremap <silent> <leader>gs :Gstatus<cr>
 
 nnoremap <silent> <leader>gf <c-w>vgf
 
@@ -357,6 +361,7 @@ nnoremap <silent> <leader>ve :ViraEpics<cr>
 nnoremap <silent> <leader>vi :ViraIssues<cr>
 nnoremap <silent> <leader>vq :ViraQuit<cr>
 nnoremap <silent> <leader>vr :ViraReport<cr>
+nnoremap <silent> <leader>vR :ViraRefresh<cr>
 nnoremap <silent> <leader>vs :ViraServers<cr>
 nnoremap <silent> <leader>vt :ViraTodos<cr>
 
@@ -364,7 +369,8 @@ nnoremap <silent> <leader>vt :ViraTodos<cr>
 nnoremap <silent> <leader>vfP :ViraFilterPriorities<cr>
 nnoremap <silent> <leader>vfa :ViraFilterAssignees<cr>
 nnoremap <silent> <leader>vfp :ViraFilterProjects<cr>
-nnoremap <silent> <leader>vfr :ViraFilterReset<cr>
+nnoremap <silent> <leader>vfR :ViraFilterReset<cr>
+nnoremap <silent> <leader>vfr :ViraFilterReporters<cr>
 nnoremap <silent> <leader>vfs :ViraFilterStatuses<cr>
 nnoremap <silent> <leader>vft :ViraFilterTypes<cr>
 
@@ -376,6 +382,6 @@ nnoremap <silent> <leader>wck <c-w>k<c-w>c
 nnoremap <silent> <leader>wcl <c-w>l<c-w>c
 
 " 'Z' Folding {{{2
-nnoremap <silent> zC mmggvGzC`m<esc>
-nnoremap <silent> zO mmggvGzO`m
+nnoremap <silent> zC mmggVGzC`m<esc>kj
+nnoremap <silent> zO mmggVGzO`m<esc>kj
 nnoremap <silent> <leader><leader> za
