@@ -363,8 +363,6 @@ noremap <silent> <leader>tc :call NERDComment(0,'toggle')<cr>
 nnoremap <silent> <leader>vI :ViraIssue<cr>
 nnoremap <silent> <leader>vT :ViraTodo<cr>
 " nnoremap <silent> <leader>vb :ViraBrowse<cr>
-nnoremap <silent> <leader>vgb :execut("Git branch " . ViraStatusLine())<cr>
-nnoremap <silent> <leader>vgc :execut("Git checkout " . ViraStatusLine())<cr>
 nnoremap <silent> <leader>vc :ViraComment<cr>
 nnoremap <silent> <leader>ve :ViraEpics<cr>
 nnoremap <silent> <leader>vi :ViraIssues<cr>
@@ -382,6 +380,12 @@ nnoremap <silent> <leader>vfR :ViraFilterReset<cr>
 nnoremap <silent> <leader>vfr :ViraFilterReporters<cr>
 nnoremap <silent> <leader>vfs :ViraFilterStatuses<cr>
 nnoremap <silent> <leader>vft :ViraFilterTypes<cr>
+
+" 'VG' Vira Git {{{2
+nnoremap <silent> <leader>vgb :execute("Git branch " . ViraStatusLine())<cr>
+" nnoremap <silent> <leader>vgc :execut("Git checkout " . ViraStatusLine())<cr>
+nnoremap <leader>vgc :Gcommit<cr>:execute(':normal! i' . ViraStatusLine() . ': ')<cr>
+
 
 " 'W' Windows {{{2
 nnoremap <silent> <leader>w <c-w>
