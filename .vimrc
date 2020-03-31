@@ -329,8 +329,7 @@ nnoremap <silent> <leader>gc :Gcommit<cr>
 nnoremap <silent> <leader>gC :Git add .<cr>:Gcommit<cr>
 nnoremap <silent> <leader>gd :Gvdiffsplit<cr>
 nnoremap <silent> <leader>gD :Gvdiffsplit master<cr>
-nnoremap <silent> <leader>gm :Gmerge --no-ff<space>
-nnoremap <silent> <leader>gM :Gmerge master<cr>
+nnoremap <leader>gm :Gmerge --no-ff<space>
 nnoremap <silent> <leader>gp :Git push<cr>
 nnoremap <silent> <leader>gP :Git pull<cr>
 nnoremap <silent> <leader>gs :Gstatus<cr>
