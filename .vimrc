@@ -337,7 +337,7 @@ endfunction
 
 function s:VGmerge()
   execute 'Git checkout dev'
-  execute 'Git pull'
+  " execute 'Git pull'
   execute 'Gmerge --no-ff ' . ViraStatusLine()
   execute 'Git checkout ' . ViraStatusLine()
   execute 'Gmerge dev'
