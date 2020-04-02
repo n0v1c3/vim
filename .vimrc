@@ -321,8 +321,7 @@ nnoremap <silent> <leader><backspace> mmA<backspace><esc>`m
 
 " 'G' Git / Go {{{2
 function! s:VGcommit()
-  execute 'Gcommit'
-  execute 'normal! i' . ViraStatusLine() . ': '
+  execute 'Git commit -m "' . input(ViraStatusLine() . ': ') . '"'
 endfunction
 
 function! s:VGcheckout()
@@ -340,10 +339,10 @@ function s:VGmerge()
   execute 'normal! 0Di' . ViraStatusLine() . ': '
 endfunction
 
-nnoremap <silent> <leader>gC :call <SID>VGcheckout()<cr>
-nnoremap <silent> <leader>gb :call <SID>VGbranch()<cr>
-nnoremap <silent> <leader>gc :call <SID>VGcommit()<cr>
-nnoremap <silent> <leader>gm :call <SID>VGmerge()<cr>
+nnoremap <leader>gC :call <SID>VGcheckout()<cr>
+nnoremap <leader>gb :call <SID>VGbranch()<cr>
+nnoremap <leader>gc :call <SID>VGcommit()<cr>
+nnoremap <leader>gm :call <SID>VGmerge()<cr>
 
 nnoremap <silent> <leader>ga :Git add .<cr><cr>
 nnoremap <silent> <leader>gB :Gblame<cr><c-w>lzz
