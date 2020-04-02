@@ -321,7 +321,7 @@ nnoremap <silent> <leader><backspace> mmA<backspace><esc>`m
 
 " 'G' Git / Go {{{2
 function! s:VGcommit()
-  execute 'Git commit -m "' . input(ViraStatusLine() . ': ') . '"'
+  execute 'Git commit -m "' . ViraStatusLine() . ': ' . input(ViraStatusLine() . ': ') . '"'
 endfunction
 
 function! s:VGcheckout()
@@ -335,7 +335,7 @@ endfunction
 
 function s:VGmerge()
   execute 'Git checkout dev'
-  execute 'Gmerge --no-ff ' . ViraStatusLine() . ' -m "' . input(ViraStatusLine() . ': ') . '"'
+  execute 'Gmerge --no-ff ' . ViraStatusLine() . ' -m "' . ViraStatusLine() . ': ' . input(ViraStatusLine() . ': ') . '"'
   execute 'Git checkout ' . ViraStatusLine()
   execute 'Gmerge dev'
 endfunction
