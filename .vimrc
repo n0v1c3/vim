@@ -327,12 +327,17 @@ function! s:VGcommit()
 endfunction
 
 function! s:VGcheckout()
-  execut 'Git checkout ' . ViraStatusLine()
+  execute 'Git checkout ' . ViraStatusLine()
 endfunction
 
 function! s:VGbranch()
-  execut 'Git checkout dev'
-  execut 'Git checkout -b ' . ViraStatusLine()
+  execute 'Git checkout dev'
+  execute 'Git checkout -b ' . ViraStatusLine()
+endfunction
+
+function s:VGmerge()
+  execute 'Git checkout dev'
+  execute 'Gmerge --no-ff ' . ViraStatusLine()
 endfunction
 
 nnoremap <silent> <leader>ga :Git add .<cr><cr>
@@ -344,7 +349,7 @@ nnoremap <silent> <leader>gl :GV<cr>
 nnoremap <silent> <leader>gc :call <SID>VGcommit()<cr>
 nnoremap <silent> <leader>gd :Gvdiffsplit<cr>
 nnoremap <silent> <leader>gD :Gvdiffsplit master<cr>
-nnoremap <leader>gm :Gmerge --no-ff<space>
+nnoremap <leader>gm :call <SID>Gmerge()<cr>
 nnoremap <silent> <leader>gp :Git push<cr>
 nnoremap <silent> <leader>gP :Git pull<cr>
 nnoremap <silent> <leader>gs :Gstatus<cr>
