@@ -292,7 +292,6 @@ command! Lprev try | lprev | catch | llast | catch | endtry
 noremap <silent> j gj
 noremap <silent> k gk
 noremap <silent> p p:SyntasticCheck<cr>
-noremap <silent> <leader>qa :qa<cr>
 noremap <silent> u u:SyntasticCheck<cr>
 nnoremap / :set hlsearch<cr>:let g:hlstate=1<cr>/
 nnoremap <silent> <leader>l l
@@ -337,10 +336,8 @@ endfunction
 
 function s:VGmerge()
   execute 'Git checkout dev'
-  " execute 'Git pull'
   execute 'Gmerge --no-ff ' . ViraStatusLine()
-  execute 'Git checkout ' . ViraStatusLine()
-  execute 'Gmerge dev'
+  execute 'normal! 0Di' . ViraStatusLine() . ': '
 endfunction
 
 nnoremap <silent> <leader>gC :call <SID>VGcheckout()<cr>
@@ -362,6 +359,10 @@ nnoremap <silent> <leader>gf <c-w>vgf
 
 " 'P' Plug {{{2
 nnoremap <leader>pu :PlugInstall<cr>:PlugUpdate<cr>
+
+" 'Q' Quit {{{2
+noremap <silent> <leader>qa :qa<cr>
+noremap <silent> <leader>qw <c-w>q
 
 " 'S' Search / Source {{{2
 nnoremap <leader>sf :Files<cr>
