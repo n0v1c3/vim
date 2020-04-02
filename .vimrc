@@ -335,8 +335,9 @@ endfunction
 
 function s:VGmerge()
   execute 'Git checkout dev'
-  execute 'Gmerge --no-ff ' . ViraStatusLine()
-  execute 'normal! 0Di' . ViraStatusLine() . ': '
+  execute 'Gmerge --no-ff -m "' . input(ViraStatusLine() . ': ') . '"'
+  execute 'Git checkout ' . ViraStatusLine()
+  execute 'Gmerge dev'
 endfunction
 
 nnoremap <leader>gC :call <SID>VGcheckout()<cr>
