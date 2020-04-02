@@ -338,6 +338,8 @@ endfunction
 function s:VGmerge()
   execute 'Git checkout dev'
   execute 'Gmerge --no-ff ' . ViraStatusLine()
+  execute 'Git checkout ' . ViraStatusLine()
+  execute 'Gmerge dev'
 endfunction
 
 nnoremap <silent> <leader>ga :Git add .<cr><cr>
