@@ -336,19 +336,23 @@ endfunction
 
 function s:VGmerge()
   execute 'Git checkout dev'
+  " execute 'Git pull'
   execute 'Gmerge --no-ff ' . ViraStatusLine()
+  execute 'Git checkout ' . ViraStatusLine()
+  execute 'Gmerge dev'
 endfunction
 
-nnoremap <silent> <leader>ga :Git add .<cr><cr>
-nnoremap <silent> <leader>gb :call <SID>VGbranch()<cr>
-nnoremap <silent> <leader>gB :Gblame<cr><c-w>lzz
 nnoremap <silent> <leader>gC :call <SID>VGcheckout()<cr>
+nnoremap <silent> <leader>gb :call <SID>VGbranch()<cr>
+nnoremap <silent> <leader>gc :call <SID>VGcommit()<cr>
+nnoremap <silent> <leader>gm :call <SID>VGmerge()<cr>
+
+nnoremap <silent> <leader>ga :Git add .<cr><cr>
+nnoremap <silent> <leader>gB :Gblame<cr><c-w>lzz
 nnoremap <silent> <leader>gCd :Git checkout dev<cr>
 nnoremap <silent> <leader>gl :GV<cr>
-nnoremap <silent> <leader>gc :call <SID>VGcommit()<cr>
 nnoremap <silent> <leader>gd :Gvdiffsplit<cr>
 nnoremap <silent> <leader>gD :Gvdiffsplit master<cr>
-nnoremap <leader>gm :call <SID>Gmerge()<cr>
 nnoremap <silent> <leader>gp :Git push<cr>
 nnoremap <silent> <leader>gP :Git pull<cr>
 nnoremap <silent> <leader>gs :Gstatus<cr>
@@ -403,12 +407,6 @@ nnoremap <silent> <leader>vfR :ViraFilterReset<cr>
 nnoremap <silent> <leader>vfr :ViraFilterReporters<cr>
 nnoremap <silent> <leader>vfs :ViraFilterStatuses<cr>
 nnoremap <silent> <leader>vft :ViraFilterTypes<cr>
-
-" 'VG' Vira Git {{{2
-nnoremap <silent> <leader>vgb :execute("Git branch " . ViraStatusLine())<cr>
-" nnoremap <silent> <leader>vgc :execut("Git checkout " . ViraStatusLine())<cr>
-nnoremap <leader>vgc :Gcommit<cr>:execute('normal! i' . ViraStatusLine() . ': ')<cr>
-
 
 " 'W' Windows {{{2
 nnoremap <silent> <leader>w <c-w>
