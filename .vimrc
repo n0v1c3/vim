@@ -327,7 +327,8 @@ function! s:VGcommit()
 endfunction
 
 nnoremap <silent> <leader>ga :Git add .<cr><cr>
-nnoremap <silent> <leader>gb :execut("Git checkout -b " . input("Branch: "))<cr>
+nnoremap <silent> <leader>gbi :execut("Git checkout " . ViraStatusLine())<cr>
+nnoremap <silent> <leader>gbd :Git checkout dev<cr>
 nnoremap <silent> <leader>gl :GV<cr>
 nnoremap <silent> <leader>gB :Gblame<cr><c-w>lzz
 nnoremap <silent> <leader>gc :call <SID>VGcommit()<cr>
