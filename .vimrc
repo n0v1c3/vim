@@ -321,11 +321,16 @@ nnoremap <silent> <leader>; mmA;<esc>`m
 nnoremap <silent> <leader><backspace> mmA<backspace><esc>`m
 
 " 'G' Git / Go {{{2
+function! s:VGcommit()
+  execute 'Gcommit'
+  execute 'normal! i' . ViraStatusLine() . ': '
+endfunction
+
 nnoremap <silent> <leader>ga :Git add .<cr><cr>
 nnoremap <silent> <leader>gb :execut("Git checkout -b " . input("Branch: "))<cr>
 nnoremap <silent> <leader>gl :GV<cr>
 nnoremap <silent> <leader>gB :Gblame<cr><c-w>lzz
-nnoremap <silent> <leader>gc :Gcommit<cr>
+nnoremap <silent> <leader>gc :call <SID>VGcommit()<cr>
 nnoremap <silent> <leader>gC :Git add .<cr>:Gcommit<cr>
 nnoremap <silent> <leader>gd :Gvdiffsplit<cr>
 nnoremap <silent> <leader>gD :Gvdiffsplit master<cr>
@@ -384,7 +389,7 @@ nnoremap <silent> <leader>vft :ViraFilterTypes<cr>
 " 'VG' Vira Git {{{2
 nnoremap <silent> <leader>vgb :execute("Git branch " . ViraStatusLine())<cr>
 " nnoremap <silent> <leader>vgc :execut("Git checkout " . ViraStatusLine())<cr>
-nnoremap <leader>vgc :Gcommit<cr>:execute(':normal! i' . ViraStatusLine() . ': ')<cr>
+nnoremap <leader>vgc :Gcommit<cr>:execute('normal! i' . ViraStatusLine() . ': ')<cr>
 
 
 " 'W' Windows {{{2
