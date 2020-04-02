@@ -321,15 +321,35 @@ nnoremap <silent> <leader>; mmA;<esc>`m
 nnoremap <silent> <leader><backspace> mmA<backspace><esc>`m
 
 " 'G' Git / Go {{{2
+function! s:VGcommit()
+  execute 'Gcommit'
+  execute 'normal! i' . ViraStatusLine() . ': '
+endfunction
+
+function! s:VGcheckout()
+  execute 'Git checkout ' . ViraStatusLine()
+endfunction
+
+function! s:VGbranch()
+  execute 'Git checkout dev'
+  execute 'Git checkout -b ' . ViraStatusLine()
+endfunction
+
+function s:VGmerge()
+  execute 'Git checkout dev'
+  execute 'Gmerge --no-ff ' . ViraStatusLine()
+endfunction
+
 nnoremap <silent> <leader>ga :Git add .<cr><cr>
-nnoremap <silent> <leader>gb :execut("Git checkout -b " . input("Branch: "))<cr>
-nnoremap <silent> <leader>gl :GV<cr>
+nnoremap <silent> <leader>gb :call <SID>VGbranch()<cr>
 nnoremap <silent> <leader>gB :Gblame<cr><c-w>lzz
-nnoremap <silent> <leader>gc :Gcommit<cr>
-nnoremap <silent> <leader>gC :Git add .<cr>:Gcommit<cr>
+nnoremap <silent> <leader>gC :call <SID>VGcheckout()<cr>
+nnoremap <silent> <leader>gCd :Git checkout dev<cr>
+nnoremap <silent> <leader>gl :GV<cr>
+nnoremap <silent> <leader>gc :call <SID>VGcommit()<cr>
 nnoremap <silent> <leader>gd :Gvdiffsplit<cr>
 nnoremap <silent> <leader>gD :Gvdiffsplit master<cr>
-nnoremap <leader>gm :Gmerge --no-ff<space>
+nnoremap <leader>gm :call <SID>Gmerge()<cr>
 nnoremap <silent> <leader>gp :Git push<cr>
 nnoremap <silent> <leader>gP :Git pull<cr>
 nnoremap <silent> <leader>gs :Gstatus<cr>
@@ -384,7 +404,7 @@ nnoremap <silent> <leader>vft :ViraFilterTypes<cr>
 " 'VG' Vira Git {{{2
 nnoremap <silent> <leader>vgb :execute("Git branch " . ViraStatusLine())<cr>
 " nnoremap <silent> <leader>vgc :execut("Git checkout " . ViraStatusLine())<cr>
-nnoremap <leader>vgc :Gcommit<cr>:execute(':normal! i' . ViraStatusLine() . ': ')<cr>
+nnoremap <leader>vgc :Gcommit<cr>:execute('normal! i' . ViraStatusLine() . ': ')<cr>
 
 
 " 'W' Windows {{{2
