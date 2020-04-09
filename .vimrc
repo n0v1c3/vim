@@ -326,21 +326,21 @@ endfunction
 
 function! s:VGcommit()
   execute 'Git commit -m ' . s:VGprompt()
-endfunction
-
-function! s:VGcheckout()
-  execute 'Git checkout ' . ViraStatusLine()
+  execute 'Git push'
 endfunction
 
 function! s:VGbranch()
   execute 'Git checkout dev'
   execute 'Git checkout -b ' . ViraStatusLine()
+  execute 'Git checkout ' . ViraStatusLine()
+  execute 'Git push -u origin ' . ViraStatusLine()
 endfunction
 
 function s:VGmerge()
   execute 'Git checkout dev'
   execute 'Gmerge --no-ff ' . ViraStatusLine() . ' -m ' . s:VGprompt()
   execute 'Git branch -d ' . ViraStatusLine()
+  execute 'Git push origin --delete ' . ViraStatusLine()
 endfunction
 
 nnoremap <leader>gC :call <SID>VGcheckout()<cr>
