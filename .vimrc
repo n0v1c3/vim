@@ -325,7 +325,7 @@ function! s:VGprompt()
 endfunction
 
 function! s:VGcommit()
-  execute 'Git commit -m ' . VGprompt()
+  execute 'Git commit -m ' . s:VGprompt()
 endfunction
 
 function! s:VGcheckout()
@@ -339,7 +339,7 @@ endfunction
 
 function s:VGmerge()
   execute 'Git checkout dev'
-  execute 'Gmerge --no-ff ' . ViraStatusLine() . ' -m ' . VGprompt()
+  execute 'Gmerge --no-ff ' . ViraStatusLine() . ' -m ' . s:VGprompt()
   execute 'Git branch -d ' . ViraStatusLine()
 endfunction
 
@@ -408,6 +408,7 @@ nnoremap <silent> <leader>vfR :ViraFilterReset<cr>
 nnoremap <silent> <leader>vfr :ViraFilterReporters<cr>
 nnoremap <silent> <leader>vfs :ViraFilterStatuses<cr>
 nnoremap <silent> <leader>vft :ViraFilterTypes<cr>
+nnoremap <silent> <leader>vfv :ViraFilterVersions<cr>
 
 " 'W' Windows {{{2
 nnoremap <silent> <leader>w <c-w>
