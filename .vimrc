@@ -343,7 +343,6 @@ function s:VGmerge()
   execute 'Git push origin --delete ' . ViraStatusLine()
 endfunction
 
-nnoremap <leader>gC :call <SID>VGcheckout()<cr>
 nnoremap <leader>gb :call <SID>VGbranch()<cr>
 nnoremap <leader>gc :call <SID>VGcommit()<cr>
 nnoremap <leader>gm :call <SID>VGmerge()<cr>
