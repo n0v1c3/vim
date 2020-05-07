@@ -341,6 +341,7 @@ function s:VGmerge()
   execute 'Gmerge --no-ff ' . ViraStatusLine() . ' -m ' . s:VGprompt()
   execute 'Git branch -d ' . ViraStatusLine()
   execute 'Git push origin --delete ' . ViraStatusLine()
+  execute 'Git push'
 endfunction
 
 nnoremap <leader>gb :call <SID>VGbranch()<cr>
@@ -396,8 +397,12 @@ nnoremap <silent> <leader>vi :ViraIssues<cr>
 nnoremap <silent> <leader>vq :ViraQuit<cr>
 nnoremap <silent> <leader>vr :ViraReport<cr>
 nnoremap <silent> <leader>vR :ViraRefresh<cr>
-nnoremap <silent> <leader>vs :ViraServers<cr>
+nnoremap <silent> <leader>vS :ViraServers<cr>
 nnoremap <silent> <leader>vt :ViraTodos<cr>
+
+" Sets
+nnoremap <silent> <leader>vsa :ViraSetAssignee<cr>
+nnoremap <silent> <leader>vss :ViraSetStatus<cr>
 
 " Search filters
 nnoremap <silent> <leader>vfP :ViraFilterPriorities<cr>
