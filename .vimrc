@@ -27,10 +27,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/vim-plug.vim'
 Plug 'kalekundert/vim-coiled-snake'
-" Plug 'Konfekt/FastFold'
 Plug 'JamshedVesuna/vim-markdown-preview'
-
-" Plug 'megaannum/forms'
 Plug 'vim-airline/vim-airline'
 
 " Git {{{3
@@ -52,7 +49,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') } " Auto-completion
 Plug 'davidhalter/jedi-vim'
 Plug 'ervandew/supertab'
-"Plug 'SirVer/ultisnips'
 
 " Linting {{{3
 Plug 'w0rp/ale'
@@ -66,7 +62,8 @@ Plug 'OmniSharp/omnisharp-vim'
 
 " Faster/pretty code {{{3
 Plug 'tpope/vim-surround'
-Plug 'altercation/vim-colors-solarized'
+" Plug 'altercation/vim-colors-solarized'
+Plug 'altercation/vim-solarized8'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'yggdroot/indentline'
 Plug 'sjl/gundo.vim'
@@ -256,9 +253,10 @@ let g:airline_section_z = '%{ViraStatusLine()}'
 " Postpone screen redraw until macro completion
 set lazyredraw              " Postpone screen redraw until macro completion
 set t_Co=256                " 256 color
-syntax on                   " Highlighting requirement
-colorscheme solarized       " Public color scheme
+" syntax on                   " Highlighting requirement
+syntax enable                    " Highlighting requirement
 set background=dark         " Dark background for theme
+colorscheme solarized8       " Public color scheme
 
 " Wildignore {{{2
 " Ignore these files when expanding wildcards
@@ -283,9 +281,9 @@ augroup END
 " Commands {{{1
 " QuickFix/Location List {{{2
 command! Cnext try | cnext | catch | cfirst | catch | endtry
-command! Cprev try | cprev | catch | clast | catch | endtry
+command! Cprev try | cprev | catch | clast  | catch | endtry
 command! Lnext try | lnext | catch | lfirst | catch | endtry
-command! Lprev try | lprev | catch | llast | catch | endtry
+command! Lprev try | lprev | catch | llast  | catch | endtry
 
 " Key Mappings {{{1
 " VIM {{{2
@@ -306,6 +304,10 @@ nnoremap <silent> <c-h> 3zh
 nnoremap <silent> <c-j> 3<c-e>
 nnoremap <silent> <c-k> 3<c-y>
 nnoremap <silent> <c-l> 3zl
+
+
+nnoremap <silent> <leader>ej :lnext<cr>
+nnoremap <silent> <leader>ek :lprev<cr>
 
 " 'E' Edits / Errors {{{2
 nnoremap <silent> <leader>ev :find $MYVIMRC<cr>
@@ -339,6 +341,8 @@ endfunction
 function s:VGmerge()
   execute 'Git checkout dev'
   execute 'Gmerge --no-ff ' . ViraStatusLine() . ' -m ' . s:VGprompt()
+  execute 'Git push'
+
   execute 'Git branch -d ' . ViraStatusLine()
   execute 'Git push origin --delete ' . ViraStatusLine()
 endfunction
@@ -360,7 +364,7 @@ nnoremap <silent> <leader>gs :Gstatus<cr>
 nnoremap <silent> <leader>gf <c-w>vgf
 
 " 'P' Plug {{{2
-nnoremap <leader>pu :PlugInstall<cr>:PlugUpdate<cr>
+nnoremap <leader>pu :PlugInstall<cr>:PlugUpdate<cr>:PlugClean<cr>
 
 " 'Q' Quit {{{2
 noremap <silent> <leader>qa :qa<cr>
@@ -374,10 +378,15 @@ nnoremap <leader>sW :set noignorecase<cr>:set hlsearch<cr>:let g:hlstate=1<cr>/
 
 nnoremap <silent> <leader>sv mm:source $MYVIMRC<cr>`m
 
-" 'T' Tabs / Toggles {{{2
-" TODO-TJG [190124] - Tabs need to be created
-nnoremap <silent> <leader>tj gt
-nnoremap <silent> <leader>tk gT
+" 'T' Tabbles / Tabs / Tags / Toggles {{{2
+let g:table_mode_header_fillchar='='
+let g:table_mode_corner='+'
+nnoremap <silent> <leader>tm :TableModeToggle<cr>
+nnoremap <silent> <leader>tr :TableModeRealign<cr>
+
+nnoremap <silent> <leader>tn :tabnew<cr>
+nnoremap <silent> <leader>tj gT
+nnoremap <silent> <leader>tk gt
 
 nnoremap <silent> <leader>t# :setlocal number!<cr>:setlocal relativenumber!<cr>
 nnoremap <silent> <leader>th :call <SID>ToggleHighlight()<cr>
@@ -387,6 +396,7 @@ nnoremap <silent> <leader>tt :NERDTreeToggle<cr>
 noremap <silent> <leader>tc :call NERDComment(0,'toggle')<cr>
 
 " 'V' Vira {{{2
+nnoremap <silent> <leader>vA :ViraAssignIssue<cr>
 nnoremap <silent> <leader>vI :ViraIssue<cr>
 nnoremap <silent> <leader>vT :ViraTodo<cr>
 " nnoremap <silent> <leader>vb :ViraBrowse<cr>
@@ -399,7 +409,11 @@ nnoremap <silent> <leader>vR :ViraRefresh<cr>
 nnoremap <silent> <leader>vs :ViraServers<cr>
 nnoremap <silent> <leader>vt :ViraTodos<cr>
 
-" Search filters
+" Set
+nnoremap <silent> <leader>vsa :ViraSetAssignee<cr>
+nnoremap <silent> <leader>vss :ViraSetStatus<cr>
+
+" Filter
 nnoremap <silent> <leader>vfP :ViraFilterPriorities<cr>
 nnoremap <silent> <leader>vfa :ViraFilterAssignees<cr>
 nnoremap <silent> <leader>vfp :ViraFilterProjects<cr>
@@ -411,12 +425,10 @@ nnoremap <silent> <leader>vfv :ViraFilterVersions<cr>
 
 " 'W' Windows {{{2
 nnoremap <silent> <leader>w <c-w>
-nnoremap <silent> <leader>wch <c-w>h<c-w>c
-nnoremap <silent> <leader>wcj <c-w>j<c-w>c
-nnoremap <silent> <leader>wck <c-w>k<c-w>c
-nnoremap <silent> <leader>wcl <c-w>l<c-w>c
 
 " 'Z' Folding {{{2
 nnoremap <silent> zC mmggVGzC`m<esc>kj
 nnoremap <silent> zO mmggVGzO`m<esc>kj
 nnoremap <silent> <leader><leader> za
+
+nnoremap <silent> <leader>gw :tabnew<cr>:terminal ++curwin curl wttr.in/Calgary<cr>
