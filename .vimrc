@@ -63,7 +63,7 @@ Plug 'OmniSharp/omnisharp-vim'
 " Faster/pretty code {{{3
 Plug 'tpope/vim-surround'
 " Plug 'altercation/vim-colors-solarized'
-Plug 'altercation/vim-solarized8'
+Plug 'lifepillar/vim-solarized8'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'yggdroot/indentline'
 Plug 'sjl/gundo.vim'
