@@ -269,6 +269,7 @@ set wildignore+=*.swp
 " Use YAML files
 let g:vira_config_file_servers = $HOME . '/.config/vira/vira_servers.yaml'
 let g:vira_config_file_projects = $HOME . '/.config/vira/vira_projects.yaml'
+" let g:vira_config_file_projects = $HOME . '/.config/vira/vira_projects.json'
 
 " AutoGroups {{{1
 " AutoHotKey {{{2
@@ -333,6 +334,7 @@ endfunction
 
 function! s:VGbranch()
   execute 'Git checkout dev'
+  execute 'Git pull'
   execute 'Git checkout -b ' . ViraStatusLine()
   execute 'Git checkout ' . ViraStatusLine()
   execute 'Git push -u origin ' . ViraStatusLine()
@@ -340,6 +342,7 @@ endfunction
 
 function s:VGmerge()
   execute 'Git checkout dev'
+  execute 'Git pull'
   execute 'Gmerge --no-ff ' . ViraStatusLine() . ' -m ' . s:VGprompt()
   execute 'Git push'
 
@@ -348,9 +351,18 @@ function s:VGmerge()
   execute 'Git push'
 endfunction
 
+" TODO: VIRA-164 [200608] - update my master merge function in vim
+function s:VGmaster()
+  execute 'Git checkout master'
+  execute 'Git pull'
+  execute 'Gmerge --no-ff dev -m "' . input('VIRA - ' . input('Version: ')) . '"'
+  execute 'Git push'
+endfunction
+
 nnoremap <leader>gb :call <SID>VGbranch()<cr>
 nnoremap <leader>gc :call <SID>VGcommit()<cr>
 nnoremap <leader>gm :call <SID>VGmerge()<cr>
+nnoremap <leader>gM :call <SID>VGmaster()<cr>
 
 nnoremap <silent> <leader>ga :Git add .<cr><cr>
 nnoremap <silent> <leader>gB :Gblame<cr><c-w>lzz
@@ -371,13 +383,17 @@ nnoremap <leader>pu :PlugInstall<cr>:PlugUpdate<cr>:PlugClean<cr>
 noremap <silent> <leader>qa :qa<cr>
 noremap <silent> <leader>qw <c-w>q
 
-" 'S' Search / Source {{{2
+" 'S' Search / Source / Spell {{{2
 nnoremap <leader>sf :Files<cr>
 nnoremap <leader>sh :History<cr>
 nnoremap <leader>sw :set ignorecase<cr>:set hlsearch<cr>:let g:hlstate=1<cr>/
 nnoremap <leader>sW :set noignorecase<cr>:set hlsearch<cr>:let g:hlstate=1<cr>/
 
 nnoremap <silent> <leader>sv mm:source $MYVIMRC<cr>`m
+
+nnoremap <leader>sl :set spelllang=en_ca<cr>
+nnoremap <leader>sn :set nospell<cr>
+nnoremap <leader>sc z=1<cr>
 
 " 'T' Tabbles / Tabs / Tags / Toggles {{{2
 let g:table_mode_header_fillchar='='
@@ -415,6 +431,8 @@ nnoremap <silent> <leader>vsa :ViraSetAssignee<cr>
 nnoremap <silent> <leader>vss :ViraSetStatus<cr>
 
 " Search filters
+nnoremap <silent> <leader>v/ :ViraFilterText<cr>
+
 nnoremap <silent> <leader>vfP :ViraFilterPriorities<cr>
 nnoremap <silent> <leader>vfa :ViraFilterAssignees<cr>
 nnoremap <silent> <leader>vfp :ViraFilterProjects<cr>
