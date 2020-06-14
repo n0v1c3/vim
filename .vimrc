@@ -27,10 +27,7 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call plug#begin('~/.vim/plugged')
 Plug 'junegunn/vim-plug.vim'
 Plug 'kalekundert/vim-coiled-snake'
-" Plug 'Konfekt/FastFold'
 Plug 'JamshedVesuna/vim-markdown-preview'
-
-" Plug 'megaannum/forms'
 Plug 'vim-airline/vim-airline'
 
 " Git {{{3
@@ -52,7 +49,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') } " Auto-completion
 Plug 'davidhalter/jedi-vim'
 Plug 'ervandew/supertab'
-"Plug 'SirVer/ultisnips'
 
 " Linting {{{3
 Plug 'w0rp/ale'
@@ -66,7 +62,8 @@ Plug 'OmniSharp/omnisharp-vim'
 
 " Faster/pretty code {{{3
 Plug 'tpope/vim-surround'
-Plug 'altercation/vim-colors-solarized'
+" Plug 'altercation/vim-colors-solarized'
+Plug 'lifepillar/vim-solarized8'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'yggdroot/indentline'
 Plug 'sjl/gundo.vim'
@@ -256,9 +253,10 @@ let g:airline_section_z = '%{ViraStatusLine()}'
 " Postpone screen redraw until macro completion
 set lazyredraw              " Postpone screen redraw until macro completion
 set t_Co=256                " 256 color
-syntax on                   " Highlighting requirement
-colorscheme solarized       " Public color scheme
+" syntax on                   " Highlighting requirement
+syntax enable                    " Highlighting requirement
 set background=dark         " Dark background for theme
+colorscheme solarized8       " Public color scheme
 
 " Wildignore {{{2
 " Ignore these files when expanding wildcards
@@ -271,6 +269,7 @@ set wildignore+=*.swp
 " Use YAML files
 let g:vira_config_file_servers = $HOME . '/.config/vira/vira_servers.yaml'
 let g:vira_config_file_projects = $HOME . '/.config/vira/vira_projects.yaml'
+" let g:vira_config_file_projects = $HOME . '/.config/vira/vira_projects.json'
 
 " AutoGroups {{{1
 " AutoHotKey {{{2
@@ -283,16 +282,15 @@ augroup END
 " Commands {{{1
 " QuickFix/Location List {{{2
 command! Cnext try | cnext | catch | cfirst | catch | endtry
-command! Cprev try | cprev | catch | clast | catch | endtry
+command! Cprev try | cprev | catch | clast  | catch | endtry
 command! Lnext try | lnext | catch | lfirst | catch | endtry
-command! Lprev try | lprev | catch | llast | catch | endtry
+command! Lprev try | lprev | catch | llast  | catch | endtry
 
 " Key Mappings {{{1
 " VIM {{{2
 noremap <silent> j gj
 noremap <silent> k gk
 noremap <silent> p p:SyntasticCheck<cr>
-noremap <silent> <leader>qa :qa<cr>
 noremap <silent> u u:SyntasticCheck<cr>
 nnoremap / :set hlsearch<cr>:let g:hlstate=1<cr>/
 nnoremap <silent> <leader>l l
@@ -308,6 +306,10 @@ nnoremap <silent> <c-j> 3<c-e>
 nnoremap <silent> <c-k> 3<c-y>
 nnoremap <silent> <c-l> 3zl
 
+
+nnoremap <silent> <leader>ej :lnext<cr>
+nnoremap <silent> <leader>ek :lprev<cr>
+
 " 'E' Edits / Errors {{{2
 nnoremap <silent> <leader>ev :find $MYVIMRC<cr>
 
@@ -321,15 +323,53 @@ nnoremap <silent> <leader>; mmA;<esc>`m
 nnoremap <silent> <leader><backspace> mmA<backspace><esc>`m
 
 " 'G' Git / Go {{{2
+function! s:VGprompt()
+  return '"' . ViraStatusLine() . ': ' . input(ViraStatusLine() . ': ') . '"'
+endfunction
+
+function! s:VGcommit()
+  execute 'Git commit -m ' . s:VGprompt()
+  execute 'Git push'
+endfunction
+
+function! s:VGbranch()
+  execute 'Git checkout dev'
+  execute 'Git pull'
+  execute 'Git checkout -b ' . ViraStatusLine()
+  execute 'Git checkout ' . ViraStatusLine()
+  execute 'Git push -u origin ' . ViraStatusLine()
+endfunction
+
+function s:VGmerge()
+  execute 'Git checkout dev'
+  execute 'Git pull'
+  execute 'Gmerge --no-ff ' . ViraStatusLine() . ' -m ' . s:VGprompt()
+  execute 'Git push'
+
+  execute 'Git branch -d ' . ViraStatusLine()
+  execute 'Git push origin --delete ' . ViraStatusLine()
+  execute 'Git push'
+endfunction
+
+" TODO: VIRA-164 [200608] - update my master merge function in vim
+function s:VGmaster()
+  execute 'Git checkout master'
+  execute 'Git pull'
+  execute 'Gmerge --no-ff dev -m "' . input('VIRA - ' . input('Version: ')) . '"'
+  execute 'Git push'
+endfunction
+
+nnoremap <leader>gb :call <SID>VGbranch()<cr>
+nnoremap <leader>gc :call <SID>VGcommit()<cr>
+nnoremap <leader>gm :call <SID>VGmerge()<cr>
+nnoremap <leader>gM :call <SID>VGmaster()<cr>
+
 nnoremap <silent> <leader>ga :Git add .<cr><cr>
-nnoremap <silent> <leader>gb :execut("Git checkout -b " . input("Branch: "))<cr>
-nnoremap <silent> <leader>gl :GV<cr>
 nnoremap <silent> <leader>gB :Gblame<cr><c-w>lzz
-nnoremap <silent> <leader>gc :Gcommit<cr>
-nnoremap <silent> <leader>gC :Git add .<cr>:Gcommit<cr>
+nnoremap <silent> <leader>gCd :Git checkout dev<cr>
+nnoremap <silent> <leader>gl :GV<cr>
 nnoremap <silent> <leader>gd :Gvdiffsplit<cr>
 nnoremap <silent> <leader>gD :Gvdiffsplit master<cr>
-nnoremap <leader>gm :Gmerge --no-ff<space>
 nnoremap <silent> <leader>gp :Git push<cr>
 nnoremap <silent> <leader>gP :Git pull<cr>
 nnoremap <silent> <leader>gs :Gstatus<cr>
@@ -337,9 +377,13 @@ nnoremap <silent> <leader>gs :Gstatus<cr>
 nnoremap <silent> <leader>gf <c-w>vgf
 
 " 'P' Plug {{{2
-nnoremap <leader>pu :PlugInstall<cr>:PlugUpdate<cr>
+nnoremap <leader>pu :PlugInstall<cr>:PlugUpdate<cr>:PlugClean<cr>
 
-" 'S' Search / Source {{{2
+" 'Q' Quit {{{2
+noremap <silent> <leader>qa :qa<cr>
+noremap <silent> <leader>qw <c-w>q
+
+" 'S' Search / Source / Spell {{{2
 nnoremap <leader>sf :Files<cr>
 nnoremap <leader>sh :History<cr>
 nnoremap <leader>sw :set ignorecase<cr>:set hlsearch<cr>:let g:hlstate=1<cr>/
@@ -347,10 +391,19 @@ nnoremap <leader>sW :set noignorecase<cr>:set hlsearch<cr>:let g:hlstate=1<cr>/
 
 nnoremap <silent> <leader>sv mm:source $MYVIMRC<cr>`m
 
-" 'T' Tabs / Toggles {{{2
-" TODO-TJG [190124] - Tabs need to be created
-nnoremap <silent> <leader>tj gt
-nnoremap <silent> <leader>tk gT
+nnoremap <leader>sl :set spelllang=en_ca<cr>
+nnoremap <leader>sn :set nospell<cr>
+nnoremap <leader>sc z=1<cr>
+
+" 'T' Tabbles / Tabs / Tags / Toggles {{{2
+let g:table_mode_header_fillchar='='
+let g:table_mode_corner='+'
+nnoremap <silent> <leader>tm :TableModeToggle<cr>
+nnoremap <silent> <leader>tr :TableModeRealign<cr>
+
+nnoremap <silent> <leader>tn :tabnew<cr>
+nnoremap <silent> <leader>tj gT
+nnoremap <silent> <leader>tk gt
 
 nnoremap <silent> <leader>t# :setlocal number!<cr>:setlocal relativenumber!<cr>
 nnoremap <silent> <leader>th :call <SID>ToggleHighlight()<cr>
@@ -360,6 +413,7 @@ nnoremap <silent> <leader>tt :NERDTreeToggle<cr>
 noremap <silent> <leader>tc :call NERDComment(0,'toggle')<cr>
 
 " 'V' Vira {{{2
+nnoremap <silent> <leader>vA :ViraAssignIssue<cr>
 nnoremap <silent> <leader>vI :ViraIssue<cr>
 nnoremap <silent> <leader>vT :ViraTodo<cr>
 " nnoremap <silent> <leader>vb :ViraBrowse<cr>
@@ -369,10 +423,16 @@ nnoremap <silent> <leader>vi :ViraIssues<cr>
 nnoremap <silent> <leader>vq :ViraQuit<cr>
 nnoremap <silent> <leader>vr :ViraReport<cr>
 nnoremap <silent> <leader>vR :ViraRefresh<cr>
-nnoremap <silent> <leader>vs :ViraServers<cr>
+nnoremap <silent> <leader>vS :ViraServers<cr>
 nnoremap <silent> <leader>vt :ViraTodos<cr>
 
+" Sets
+nnoremap <silent> <leader>vsa :ViraSetAssignee<cr>
+nnoremap <silent> <leader>vss :ViraSetStatus<cr>
+
 " Search filters
+nnoremap <silent> <leader>v/ :ViraFilterText<cr>
+
 nnoremap <silent> <leader>vfP :ViraFilterPriorities<cr>
 nnoremap <silent> <leader>vfa :ViraFilterAssignees<cr>
 nnoremap <silent> <leader>vfp :ViraFilterProjects<cr>
@@ -380,21 +440,14 @@ nnoremap <silent> <leader>vfR :ViraFilterReset<cr>
 nnoremap <silent> <leader>vfr :ViraFilterReporters<cr>
 nnoremap <silent> <leader>vfs :ViraFilterStatuses<cr>
 nnoremap <silent> <leader>vft :ViraFilterTypes<cr>
-
-" 'VG' Vira Git {{{2
-nnoremap <silent> <leader>vgb :execute("Git branch " . ViraStatusLine())<cr>
-" nnoremap <silent> <leader>vgc :execut("Git checkout " . ViraStatusLine())<cr>
-nnoremap <leader>vgc :Gcommit<cr>:execute(':normal! i' . ViraStatusLine() . ': ')<cr>
-
+nnoremap <silent> <leader>vfv :ViraFilterVersions<cr>
 
 " 'W' Windows {{{2
 nnoremap <silent> <leader>w <c-w>
-nnoremap <silent> <leader>wch <c-w>h<c-w>c
-nnoremap <silent> <leader>wcj <c-w>j<c-w>c
-nnoremap <silent> <leader>wck <c-w>k<c-w>c
-nnoremap <silent> <leader>wcl <c-w>l<c-w>c
 
 " 'Z' Folding {{{2
 nnoremap <silent> zC mmggVGzC`m<esc>kj
 nnoremap <silent> zO mmggVGzO`m<esc>kj
 nnoremap <silent> <leader><leader> za
+
+nnoremap <silent> <leader>gw :tabnew<cr>:terminal ++curwin curl wttr.in/Calgary<cr>
