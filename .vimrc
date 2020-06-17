@@ -133,15 +133,6 @@ source ~/.vim/functions/users.vim
 " set wildcharm=<C-Z>
 
 " Functions {{{1
-function! s:ToggleHighlight() " {{{2
-  if g:hlstate
-    call feedkeys(":nohlsearch\<cr>")
-  else
-    call feedkeys(":set hlsearch\<cr>")
-  endif
-  let g:hlstate = !g:hlstate
-endfunction
-
 function! s:QuickfixListToggle() " {{{2
   if g:quickfixlist_open
     execute g:quickfixlist_return_to_window . 'wincmd w'
@@ -306,7 +297,6 @@ nnoremap <silent> <c-j> 3<c-e>
 nnoremap <silent> <c-k> 3<c-y>
 nnoremap <silent> <c-l> 3zl
 
-
 nnoremap <silent> <leader>ej :lnext<cr>
 nnoremap <silent> <leader>ek :lprev<cr>
 
@@ -406,7 +396,7 @@ nnoremap <silent> <leader>tj gT
 nnoremap <silent> <leader>tk gt
 
 nnoremap <silent> <leader>t# :setlocal number!<cr>:setlocal relativenumber!<cr>
-nnoremap <silent> <leader>th :call <SID>ToggleHighlight()<cr>
+nnoremap <silent> <leader>th :set hls!<cr>
 nnoremap <silent> <leader>tl :call <SID>LocationListToggle()<cr>
 nnoremap <silent> <leader>tq :call <SID>QuickfixListToggle()<cr>
 nnoremap <silent> <leader>tt :NERDTreeToggle<cr>
@@ -432,6 +422,7 @@ nnoremap <silent> <leader>vss :ViraSetStatus<cr>
 
 " Search filters
 nnoremap <silent> <leader>v/ :ViraFilterText<cr>
+nnoremap <silent> <leader>vf/ :ViraFilterText<cr>
 
 nnoremap <silent> <leader>vfP :ViraFilterPriorities<cr>
 nnoremap <silent> <leader>vfa :ViraFilterAssignees<cr>
