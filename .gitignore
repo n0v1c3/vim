@@ -6,5 +6,7 @@ nohup.out
 bundle/
 autoload/plug.vim
 plugged/
-plugin/
+plugin/sh.vim
+plugin/surround.vim
+plugin/gv.vim
 spell/
