@@ -548,8 +548,13 @@ nnoremap <silent> <leader>gs :Gstatus<cr>
 
 nnoremap <silent> <leader>gf <c-w>vgf
 
-" 'H' Help {{{2
+" 'H' Help / Hide {{{2
+
+" Help
 nnoremap <expr> <leader>h ':help ' . expand('<cword>') . '\n'
+
+" Hide
+nnoremap <silent> <leader>h# :setlocal number!<cr>:setlocal relativenumber!<cr>
 
 " 'N' Notes {{{2
 nnoremap <silent> <leader>nh <C-w>s:find $dev/travis/health/README.md<cr>ggVGzCG
@@ -593,20 +598,24 @@ cnoremap sv source $HOME/.vimrc<C-Z>
 nnoremap <leader>ss :setlocal spell!<cr>
 nnoremap <leader>sc z=1<cr>
 
-" 'T' Tabbles / Tabs / Tags / Toggles {{{2
+" 'T' Tables / Tabs / Tags / Toggles {{{2
+
+"  Tables
 let g:table_mode_header_fillchar='='
 let g:table_mode_corner='+'
 nnoremap <silent> <leader>tm :TableModeToggle<cr>
 nnoremap <silent> <leader>tr :TableModeRealign<cr>
 nnoremap <silent> <leader>Tc retab<cr>
 
+" Tabs
 nnoremap <silent> <leader>tn :tabnew<cr>
 nnoremap <silent> <leader>j gT
 nnoremap <silent> <leader>k gt
 nnoremap <silent> <leader>tj gT
 nnoremap <silent> <leader>tk gt
 
-nnoremap <silent> <leader>t# :setlocal number!<cr>:setlocal relativenumber!<cr>
+" Toggles
+nnoremap <silent> <leader>t# :setlocal relativenumber!<cr>
 noremap <silent> <leader>tc :call NERDComment(0,'toggle')<cr>
 nnoremap <silent> <leader>th :set hls!<cr>
 nnoremap <silent> <leader>tl :call <SID>LocationListToggle()<cr>
@@ -617,8 +626,12 @@ nnoremap <silent> <leader>ts :setlocal spell!<cr>
 nnoremap <silent> <leader>tC :setlocal cursorline!<cr>
 
 " 'V' Vira {{{2
-" let g:vira_browser = "chromium"
-let g:vira_browser = "firefox"
+" Browser is set in `Set_Browser`
+function! Set_Browser(browser)
+    let g:vira_browser = a:browser
+endfunction
+call Set_Browser('firefox')
+" call Set_Browser('chromium')
 
 " Custom
 function! Git_ViraActiveIssue()
