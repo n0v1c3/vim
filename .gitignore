@@ -6,4 +6,5 @@ nohup.out
 bundle/
 autoload/plug.vim
 plugged/
+plugin/
 spell/
