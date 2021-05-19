@@ -207,7 +207,6 @@ let g:yapf_format_yapf_location = '$HOME/.vim/bundle/yapf'
 
 " Vim scripts {{{1
 source ~/.vim/functions/folds.vim
-source ~/.vim/functions/users.vim
 
 " Test Functions {{{1
 let g:unstack_populate_quickfix=1
@@ -733,13 +732,10 @@ inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
 inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
             \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 
-func! ListMonths()
-    call complete(col('.'), ['','January', 'February', 'March',
-                \ 'April', 'May', 'June', 'July', 'August', 'September',
-                \ 'October', 'November', 'December'])
+let s:usernames = []
+function! ListUsers()
+    call complete(col('.'), s:usernames)
+    " Avoid a 0 being inserted elsewhere
     return ''
-endfunc
-
-function! PrintWorkingDir()
-
 endfunction
+nnoremap <f5> i<c-r>=ListUsers()<cr>
