@@ -1,7 +1,9 @@
 *swp
 *.tmp
+tags
+nohup.out
 
-.virarc
 bundle/
-autoload/pathogen.vim
+autoload/plug.vim
 plugged/
+spell/
