@@ -3,7 +3,6 @@
 nohup.out
 tags
 autoload/plug.vim
-autoload/users.vim
 plugin/gv.vim
 plugin/sh.vim
 plugin/surround.vim
@@ -11,3 +10,5 @@ plugin/surround.vim
 bundle/
 plugged/
 spell/
+
+autoload/n0v1c3-users.vim

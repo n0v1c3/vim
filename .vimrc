@@ -206,6 +206,7 @@ let g:syntastic_python_checkers = ['flake8', 'python']
 let g:yapf_format_yapf_location = '$HOME/.vim/bundle/yapf'
 
 " Vim scripts {{{1
+source ~/.vim/autoload/n0v1c3-users.vim
 source ~/.vim/functions/folds.vim
 
 " Test Functions {{{1
@@ -499,8 +500,19 @@ function! s:VGprompt()
 endfunction
 
 function! s:VGcommit()
-  execute 'Git commit -m ' . s:VGprompt()
-  execute 'Git push'
+  silent! execute 'Git commit'
+  " -m ' . s:VGprompt()
+  if g:vira_active_issue != 'None'
+    redir @x>
+      echo g:vira_active_issue . ': '
+    redir END
+
+    put x
+    goto 1
+    join!
+    join!
+  endif
+  " execute 'Git push'
 endfunction
 
 function! s:VGbranch()
@@ -571,6 +583,10 @@ nnoremap <silent> <leader>lf mm03lr>`m " forward
 nnoremap <silent> <leader>lq mmk3lr?`m " question
 nnoremap <silent> <leader>lr mm03lr-`m " remvoed
 nnoremap <silent> <leader>lx mm03lrx`m " done
+nnoremap <silent> <leader>lu mm03lrx`m " done
+
+nnoremap <silent> <leader>lu i<c-r>=ListUsers()<cr>
+inoremap <f5>lu <c-r>=ListUsers()<cr>
 
 " 'P' Plug {{{2
 nnoremap <leader>pi :PlugInstall<cr>
@@ -627,7 +643,7 @@ nnoremap <silent> <leader>tC :setlocal cursorline!<cr>
 " 'V' Vira {{{2
 " Browser is set in `Set_Browser`
 function! Set_Browser(browser)
-    let g:vira_browser = a:browser
+  let g:vira_browser = a:browser
 endfunction
 call Set_Browser('firefox')
 " call Set_Browser('chromium')
@@ -720,8 +736,6 @@ nnoremap <silent> <leader><leader> za
 
 nnoremap <silent> <leader>gw :tabnew<cr>:terminal ++curwin curl wttr.in/Calgary<cr>
 
-inoremap <F5> <C-R>=ListMonths()<CR>
-
 let g:unstack_populate_quickfix=1
 let g:unstack_layout = "portrait"
 
@@ -731,11 +745,3 @@ inoremap <expr> <C-n> pumvisible() ? '<C-n>' :
             \ '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
 inoremap <expr> <M-,> pumvisible() ? '<C-n>' :
             \ '<C-x><C-o><C-n><C-p><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
-
-let s:usernames = []
-function! ListUsers()
-    call complete(col('.'), s:usernames)
-    " Avoid a 0 being inserted elsewhere
-    return ''
-endfunction
-nnoremap <f5> i<c-r>=ListUsers()<cr>
